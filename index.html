@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teaserly - Tutti i Trailer di Film e Serie TV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset e Stili Generali */
+        :root {
+            --primary-color: #e50914;
+            --secondary-color: #221f1f;
+            --dark-color: #000;
+            --light-color: #fff;
+            --gray-color: #333;
+            --light-gray: #aaa;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            color: var(--light-color);
+            scroll-behavior: smooth;
+        }
+
+        /* Header Sticky */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            height: 80px;
+            background-color: var(--dark-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .Logo img {
+            height: 50px;
+            width: auto;
+            transition: transform 0.3s;
+        }
+
+        .Logo img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Navbar Moderna */
+        .Link {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .Link a {
+            color: var(--light-color);
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 15px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .Link a:hover {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+        }
+
+        .Link a.active {
+            background-color: var(--primary-color);
+        }
+
+        .Link a i {
+            font-size: 18px;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 70vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('logo.png') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            margin-bottom: 50px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--light-color);
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0) translateX(-50%);
+            }
+
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+
+        /* Sezioni Contenuto */
+        .content-section {
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title i {
+            color: var(--primary-color);
+        }
+
+        /* Grid Layout per i contenuti */
+        .content-grid {
+            display: grid;
+            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        }
+
+        .content-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            aspect-ratio: 2/3;
+        }
+
+        .content-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+        }
+
+        .content-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .content-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .content-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .content-item:hover .content-info {
+            opacity: 1;
+        }
+
+        .content-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .play-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Barra di ricerca */
+        .search-container {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 30px;
+            position: relative;
+            width: 300px;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: none;
+            background-color: var(--gray-color);
+            color: var(--light-color);
+            width: 100%;
+            font-size: 14px;
+            outline: none;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
+        .search-input:focus {
+            background-color: #444;
+            width: 350px;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--light-gray);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .search-button:hover {
+            color: var(--primary-color);
+        }
+
+        /* Risultati di ricerca */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--gray-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            z-index: 101;
+            max-height: 500px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .search-result-item {
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-result-item:hover {
+            background-color: #444;
+        }
+
+        .search-result-item img {
+            width: 50px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .search-result-info {
+            flex: 1;
+        }
+
+        .search-result-info h4 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .search-result-info p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--light-gray);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .no-results {
+            padding: 15px;
+            text-align: center;
+            color: var(--light-gray);
+        }
+
+        /* Modal Trailer */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            width: 80%;
+            max-width: 1000px;
+            height: 70%;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            color: var(--light-color);
+            font-size: 30px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        iframe {
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Newsletter */
+        .newsletter {
+            background-color: var(--dark-color);
+            padding: 50px 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .newsletter h2 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .newsletter p {
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+
+        .newsletter-button {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            border: none;
+            padding: 0 25px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .newsletter-button:hover {
+            background-color: #b00710;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--light-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .social-links a {
+            color: var(--light-color);
+            font-size: 24px;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .copyright {
+            color: var(--light-gray);
+            font-size: 14px;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Stili per dispositivi mobili */
+        @media (max-width: 1024px) {
+            header {
+                padding: 0 20px;
+                height: 70px;
+                flex-wrap: wrap;
+            }
+
+            .Logo {
+                order: 1;
+            }
+
+            .mobile-search-toggle {
+                display: block;
+                order: 2;
+                margin-left: auto;
+            }
+
+            .search-container {
+                order: 4;
+                width: 100%;
+                margin: 10px 0 0 0;
+                display: none;
+            }
+
+            .search-container.active {
+                display: flex;
+            }
+
+            .Link {
+                order: 3;
+                margin-left: auto;
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 20px;
+            }
+
+            .modal-content {
+                width: 90%;
+                height: 60%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .modal-content {
+                height: 50%;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .newsletter-input {
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
+
+            .newsletter-button {
+                border-radius: 4px;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                height: 60px;
+                padding: 0 15px;
+            }
+
+            .Logo img {
+                height: 40px;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                order: 2;
+            }
+
+            .Link {
+                display: none;
+                order: 5;
+                width: 100%;
+                flex-direction: column;
+                background-color: var(--dark-color);
+                padding: 10px 0;
+                margin-top: 10px;
+            }
+
+            .Link.active {
+                display: flex;
+            }
+
+            .Link a {
+                width: 100%;
+                text-align: center;
+                padding: 10px;
+                border-radius: 0;
+            }
+
+            .hero {
+                height: 60vh;
+            }
+
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .content-info {
+                padding: 10px;
+            }
+
+            .content-info h3 {
+                font-size: 14px;
+            }
+
+            .play-button {
+                width: 25px;
+                height: 25px;
+                font-size: 0.8rem;
+            }
+
+            .search-results {
+                max-height: 300px;
+            }
+
+            .search-result-item {
+                padding: 8px 12px;
+                gap: 10px;
+            }
+
+            .search-result-item img {
+                width: 40px;
+                height: 60px;
+            }
+
+            .search-result-info h4 {
+                font-size: 14px;
+            }
+
+            .search-result-info p {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+
+            .modal-content {
+                height: 40%;
+            }
+
+            .close-modal {
+                top: -40px;
+                font-size: 25px;
+            }
+        }
+
+        /* Mobile menu toggle button (hidden by default) */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Mobile search toggle button (hidden by default) */
+        .mobile-search-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light-color);
+            font-size: 1.2rem;
+            margin-left: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="Logo">
+            <a href="#home"><img src="logo.png" alt="logo" /></a>
+        </div>
+
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <button class="mobile-search-toggle" id="mobile-search-toggle">
+            <i class="fas fa-search"></i>
+        </button>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Cerca film o serie TV..." id="search-input">
+            <button class="search-button" id="search-button"><i class="fas fa-search"></i></button>
+            <div class="search-results" id="search-results"></div>
+        </div>
+        <nav class="Link">
+            <a href="#home" class="active"><i class="fas fa-home"></i> Home</a>
+            <a href="#film"><i class="fas fa-film"></i> Film</a>
+            <a href="#serietv"><i class="fas fa-tv"></i> Serie TV</a>
+            <a href="#trailer"><i class="fas fa-play"></i> Tutti i Trailer</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <h1>Scopri i migliori trailer</h1>
+        <p>Rimani sempre aggiornato con le ultime novità di film e serie TV. Guarda i trailer in anteprima e scopri cosa
+            vale la pena vedere.</p>
+        <a href="#trailer" class="scroll-down"><i class="fas fa-chevron-down"></i></a>
+    </section>
+
+    <!-- Film Section -->
+    <section class="content-section" id="film">
+        <h2 class="section-title"><i class="fas fa-film"></i> Film Popolari</h2>
+        <div id="film-grid" class="content-grid">
+            <!-- Film caricati dinamicamente -->
+            <div class="loading-spinner"></div>
+        </div>
+    </section>
+
+    <!-- Serie TV Section -->
+    <section class="content-section" id="serietv">
+        <h2 class="section-title"><i class="fas fa-tv"></i> Serie TV Popolari</h2>
+        <div id="serie-tv-grid" class="content-grid">
+            <!-- Serie TV caricate dinamicamente -->
+            <div class="loading-spinner"></div>
+        </div>
+    </section>
+
+    <!-- Tutti i Trailer Section -->
+    <section class="content-section" id="trailer">
+        <h2 class="section-title"><i class="fas fa-play"></i> Tutti i Trailer</h2>
+        <div id="trailer-grid" class="content-grid">
+            <!-- Tutti i trailer caricati dinamicamente -->
+            <div class="loading-spinner"></div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <h2>Rimani aggiornato</h2>
+        <p>Iscriviti alla nostra newsletter per ricevere le ultime novità sui trailer direttamente nella tua email.</p>
+        <form class="newsletter-form">
+            <input type="email" class="newsletter-input" placeholder="La tua email" required>
+            <button type="submit" class="newsletter-button">Iscriviti</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="#film">Film</a>
+            <a href="#serietv">Serie TV</a>
+            <a href="#trailer">Trailer</a>
+            <a href="#">Contatti</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p class="copyright">© 2023 Teaserly. Tutti i diritti riservati.</p>
+    </footer>
+
+    <!-- Modal Trailer -->
+    <div id="trailer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <iframe id="trailer-iframe" width="100%" height="100%" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script src="tmdb.js"></script>
+    <script>
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileSearchToggle = document.getElementById('mobile-search-toggle');
+        const navLinks = document.querySelector('.Link');
+        const searchContainer = document.querySelector('.search-container');
+        const navItems = document.querySelectorAll('.Link a');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        mobileSearchToggle.addEventListener('click', () => {
+            searchContainer.classList.toggle('active');
+        });
+
+        // Highlight active nav item
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+
+                // Close mobile menu if open
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Funzione per caricare i film
+        async function loadFilms() {
+            const grid = document.getElementById('film-grid');
+            grid.innerHTML = '<div class="loading-spinner"></div>';
+
+            try {
+                const films = await TMDB.getPopularMovies();
+                displayContent(films, grid);
+            } catch (error) {
+                grid.innerHTML = '<p>Impossibile caricare i film. Riprova più tardi.</p>';
+            }
+        }
+
+
+        // Funzione per caricare le serie TV
+        async function loadSerieTV() {
+            const grid = document.getElementById('serie-tv-grid');
+            grid.innerHTML = '<div class="loading-spinner"></div>';
+
+            try {
+                const series = await TMDB.getPopularTVShows();
+                displayContent(series, grid);
+            } catch (error) {
+                grid.innerHTML = '<p>Impossibile caricare le serie TV. Riprova più tardi.</p>';
+            }
+        }
+
+        // Funzione per caricare tutti i trailer
+        async function loadTrailers() {
+            const grid = document.getElementById('trailer-grid');
+            grid.innerHTML = '<div class="loading-spinner"></div>';
+
+            try {
+                const [movies, series] = await Promise.all([
+                    TMDB.getPopularMovies(),
+                    TMDB.getPopularTVShows()
+                ]);
+
+                const allTrailers = [...movies, ...series].filter(item => item.trailer);
+                displayContent(allTrailers, grid);
+            } catch (error) {
+                grid.innerHTML = '<p>Impossibile caricare i trailer. Riprova più tardi.</p>';
+            }
+        }
+
+        function displayContent(items, container) {
+            if (!items || items.length === 0) {
+                container.innerHTML = '<p>Nessun contenuto disponibile</p>';
+                return;
+            }
+
+            container.innerHTML = items.map(item => `
+        <div class="content-item" onclick="openModal('${item.trailer}')">
+          <img src="${item.poster}" alt="${item.title}">
+          <div class="content-info">
+            <h3>${item.title}</h3>
+            <button class="play-button"><i class="fas fa-play"></i></button>
+          </div>
+        </div>
+      `).join('');
+        }
+
+
+        // Funzione per aprire il modal del trailer
+        function openModal(trailerUrl) {
+            if (!trailerUrl) return;
+            const modal = document.getElementById('trailer-modal');
+            const iframe = document.getElementById('trailer-iframe');
+
+            // Estrai l'ID video sia da URL embed che watch
+            let videoId;
+            if (trailerUrl.includes('embed/')) {
+                videoId = trailerUrl.split('embed/')[1].split('?')[0];
+            } else if (trailerUrl.includes('v=')) {
+                videoId = trailerUrl.split('v=')[1].split('&')[0];
+            } else {
+                // Se non è né embed né watch, prova a usare l'URL direttamente
+                videoId = trailerUrl;
+            }
+
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
+            modal.style.display = "flex";
+            document.body.style.overflow = "hidden";
+        }
+
+        // Funzione per chiudere il modal
+        function closeModal() {
+            document.getElementById('trailer-modal').style.display = "none";
+            document.getElementById('trailer-iframe').src = "";
+            document.body.style.overflow = "auto";
+        }
+
+        // Chiudi il modal cliccando fuori
+        window.onclick = (event) => {
+            if (event.target === document.getElementById('trailer-modal')) {
+                closeModal();
+            }
+        };
+
+        // Funzionalità di ricerca
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const searchResults = document.getElementById('search-results');
+
+        // Ricerca al click
+        searchButton.addEventListener('click', performSearch);
+
+        // Ricerca mentre si digita (con debounce)
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            if (searchInput.value.trim().length > 2) {
+                searchTimeout = setTimeout(performSearch, 500);
+            } else {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Chiudi i risultati quando si clicca fuori
+        document.addEventListener('click', (e) => {
+            if (!searchContainer.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Esegui la ricerca
+        async function performSearch() {
+            const query = searchInput.value.trim();
+            if (query.length < 3) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            searchResults.innerHTML = '<div class="loading-spinner"></div>';
+            searchResults.style.display = 'block';
+
+            try {
+                const results = await TMDB.enhancedSearch(query);
+
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="no-results">Nessun risultato trovato</div>';
+                } else {
+                    searchResults.innerHTML = results.map(item => `
+                <div class="search-result-item" onclick="handleSearchResult(${item.id}, '${item.media_type}', ${item.trailer ? `'${item.trailer}'` : 'null'})">
+                    <img src="${item.poster_path ? 'https://image.tmdb.org/t/p/w500' + item.poster_path : 'https://via.placeholder.com/50x75?text=No+Image'}" alt="${item.title}">
+                    <div class="search-result-info">
+                        <h4>${item.title}</h4>
+                        <p>${item.overview || 'Nessuna descrizione disponibile'}</p>
+                        <small>${item.release_date ? 'Uscita: ' + item.release_date.split('-')[0] : 'Data di uscita non disponibile'}</small>
+                        ${item.trailer ? '<small><i class="fas fa-play"></i> Trailer disponibile</small>' : ''}
+                    </div>
+                </div>
+            `).join('');
+                }
+            } catch (error) {
+                console.error('Errore nella ricerca:', error);
+                searchResults.innerHTML = '<div class="no-results">Errore durante la ricerca</div>';
+            }
+        }
+        // Gestisci il risultato della ricerca
+        function handleSearchResult(id, mediaType, trailerUrl) {
+            if (trailerUrl) {
+                openModal(trailerUrl);
+            } else {
+                // Se non c'è trailer, cerca di ottenerlo
+                fetchTrailerForItem(id, mediaType);
+            }
+            searchResults.style.display = 'none';
+            searchInput.value = '';
+        }
+
+        async function fetchTrailerForItem(id, mediaType) {
+            const modal = document.getElementById('trailer-modal');
+            const iframeContainer = document.querySelector('.modal-content');
+
+            // Mostra messaggio di caricamento
+            iframeContainer.innerHTML = `
+        <div style="color: white; text-align: center; padding: 20px;">
+            <div class="loading-spinner"></div>
+            <p>Sto cercando il trailer su TMDB...</p>
+        </div>
+    `;
+            modal.style.display = "flex";
+            document.body.style.overflow = "hidden";
+
+            try {
+                // Cerca il trailer su TMDB
+                const trailer = await TMDB.getTrailer(mediaType, id);
+
+                if (trailer) {
+                    // Se trovato, mostra il trailer
+                    const videoId = trailer.key;
+                    iframeContainer.innerHTML = `
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+                <iframe id="trailer-iframe" width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1" frameborder="0" allowfullscreen></iframe>
+            `;
+                } else {
+                    // Se non trovato, mostra messaggio
+                    iframeContainer.innerHTML = `
+                <div style="color: white; text-align: center; padding: 20px;">
+                    <h3>Trailer non disponibile</h3>
+                    <p>Non è stato trovato alcun trailer per questo contenuto.</p>
+                    <button onclick="closeModal()" style="background: #e50914; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px;">Chiudi</button>
+                </div>
+            `;
+                }
+            } catch (error) {
+                console.error('Errore nel recupero del trailer:', error);
+                iframeContainer.innerHTML = `
+            <div style="color: white; text-align: center; padding: 20px;">
+                <h3>Errore nel recupero del trailer</h3>
+                <p>Si è verificato un errore durante la ricerca del trailer.</p>
+                <button onclick="closeModal()" style="background: #e50914; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px;">Chiudi</button>
+            </div>
+        `;
+            }
+        }
+
+        // Newsletter form submission
+        const newsletterForm = document.querySelector('.newsletter-form');
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = newsletterForm.querySelector('input').value;
+            alert(`Grazie per esserti iscritto con ${email}! Riceverai presto le nostre novità.`);
+            newsletterForm.reset();
+        });
+
+        // Carica i contenuti all'avvio
+        loadFilms();
+        loadSerieTV();
+        loadTrailers();
+
+        // Mostra/nascondi pulsanti mobile in base alla dimensione dello schermo
+        function checkScreenSize() {
+            if (window.innerWidth <= 600) {
+                mobileMenuToggle.style.display = 'block';
+                mobileSearchToggle.style.display = 'block';
+            } else {
+                mobileMenuToggle.style.display = 'none';
+                mobileSearchToggle.style.display = 'none';
+                navLinks.classList.remove('active');
+                searchContainer.classList.remove('active');
+            }
+        }
+
+        // Esegui al caricamento e al ridimensionamento
+        window.addEventListener('load', checkScreenSize);
+        window.addEventListener('resize', checkScreenSize);
+    </script>
+</body>
+
+</html>

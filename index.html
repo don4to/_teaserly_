@@ -704,6 +704,73 @@
             margin-left: 15px;
             cursor: pointer;
         }
+
+         /* Donazione */
+
+        .donation-section {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 20px;
+            margin: 50px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .donation-section h2 {
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+            color: #e50914;
+        }
+
+        .donation-section p {
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 1.2rem;
+            color: #ccc;
+        }
+
+        .donation-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .donation-form input[type="number"] {
+            padding: 15px;
+            width: 250px;
+            border: 1px solid #555;
+            border-radius: 8px;
+            background-color: #222;
+            color: #fff;
+            font-size: 18px;
+            outline: none;
+        }
+
+        .paypal-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #ffc439;
+            color: #111;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .paypal-button:hover {
+            background-color: #ffb347;
+        }
+
+        .paypal-logo {
+            height: 24px;
+        }
+        
     </style>
 </head>
 
@@ -775,6 +842,22 @@
         <form class="newsletter-form">
             <input type="email" class="newsletter-input" placeholder="La tua email" required>
             <button type="submit" class="newsletter-button">Iscriviti</button>
+        </form>
+    </section>
+
+    <!-- Donazioni -->
+    <section class="donation-section">
+        <h2>Supporta il progetto</h2>
+        <p>Se ti piace il sito, puoi fare un'offerta per aiutarci a crescere!</p>
+        <form action="https://www.paypal.com/donate" method="post" target="_blank" class="donation-form">
+            <input type="hidden" name="business" value="donatone145@gmail.com" />
+            <input type="hidden" name="currency_code" value="EUR" />
+            <input type="number" name="amount" placeholder="Importo (€)" required min="1" step="0.01">
+            <button type="submit" class="paypal-button">
+                <img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" alt="PayPal"
+                    class="paypal-logo">
+                Dona con PayPal
+            </button>
         </form>
     </section>
 

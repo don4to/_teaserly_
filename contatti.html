@@ -69,6 +69,9 @@
 
         .form-group {
             margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .form-group label {
@@ -79,7 +82,7 @@
 
         .form-group input,
         .form-group textarea {
-            width: 100%;
+            width: calc(100% - 24px);
             padding: 12px;
             border: none;
             border-radius: 5px;
@@ -87,6 +90,7 @@
             color: var(--light-color);
             font-size: 16px;
             transition: background-color 0.3s;
+            margin: 0 auto;
         }
 
         .form-group input:focus,

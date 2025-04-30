@@ -26,7 +26,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         header {
@@ -50,6 +50,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
+            margin-top: 20px;
         }
 
         @media (max-width: 768px) {
@@ -149,6 +150,15 @@
             color: #ccc;
         }
 
+        .info-item a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .info-item a:hover {
+            color: var(--primary-color);
+        }
+
         .social-links {
             display: flex;
             gap: 15px;
@@ -235,7 +245,7 @@
                     <i class="fas fa-phone"></i>
                     <div>
                         <h3>Telefono</h3>
-                        <p>+39 371 124 6634</p>
+                        <p><a href="tel:+393711246634">+39 371 124 6634</a></p>
                     </div>
                 </div>
                 <div class="social-links">

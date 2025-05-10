@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contatti - Teaserly</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!--ELIMINARE-->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3884558259497205"
-     crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
     <style>
         /* Stili coerenti con index.html */
         :root {
@@ -194,6 +196,7 @@
         }
     </style>
 </head>
+
 <body>
     <header>
         <div class="logo">
@@ -214,7 +217,7 @@
                 <form action="https://formsubmit.co/donato.panichella@unidos.it" method="POST" id="contactForm">
                     <input type="hidden" name="_captcha" value="false">
                     <input type="hidden" name="_next" value="https://tuosito.com/contatti.html?success=true">
-                    
+
                     <div class="form-group">
                         <label for="name">Nome</label>
                         <input type="text" id="name" name="name" required>
@@ -255,16 +258,44 @@
                     </div>
                 </div>
                 <div class="social-links">
-                    <a href="https://www.instagram.com/_panichella.donato_/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.instagram.com/_panichella.donato_/" target="_blank"><i
+                            class="fab fa-instagram"></i></a>
                     <a href="https://www.youtube.com/@DON4TO__" target="_blank"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
         </div>
     </div>
 
+    <!--ELIMINARE-->
+    <!-- Inizio del banner dei cookie -->
+    <div id="cookie-banner"
+        style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #333; color: white; text-align: center; padding: 10px; font-size: 14px; z-index: 9999;">
+        <p>
+            Questo sito utilizza cookie per migliorare l'esperienza di navigazione e per la pubblicità personalizzata.
+            <a href="https://www.cookiepolicygenerator.com/live.php?token=3Uj0DiWl7JcxNhYtbvhgA0kLMJvEJlUn"
+                target="_blank" style="color: #e50914;">Scopri di più</a>.
+        </p>
+        <button id="accept-cookies"
+            style="background-color: #e50914; color: white; border: none; padding: 8px 16px; cursor: pointer; font-size: 16px;">Accetto</button>
+    </div>
+    <!-- Fine del banner dei cookie -->
+
     <script>
+
+        /*ELIMINARE*/
+        // Controllo se l'utente ha già accettato i cookie
+        if (localStorage.getItem("cookies-accepted") === "true") {
+            document.getElementById("cookie-banner").style.display = "none";
+        }
+
+        // Funzione per accettare i cookie
+        document.getElementById("accept-cookies").addEventListener("click", function () {
+            localStorage.setItem("cookies-accepted", "true"); // Memorizza il consenso dell'utente
+            document.getElementById("cookie-banner").style.display = "none"; // Nasconde il banner
+        });
+
         // Gestione invio form semplificata
-        document.getElementById('contactForm').addEventListener('submit', function() {
+        document.getElementById('contactForm').addEventListener('submit', function () {
             document.getElementById('success-message').style.display = 'block';
             setTimeout(() => {
                 document.getElementById('success-message').style.display = 'none';
@@ -286,4 +317,5 @@
         });
     </script>
 </body>
+
 </html>

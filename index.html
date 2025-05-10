@@ -3,16 +3,19 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Scopri tutti i trailer aggiornati di film e serie TV. Guarda le anteprime, esplora nuove uscite e trova cosa vedere oggi su Teaserly.it.">
-    <meta name="keywords" content="trailer, film, serie TV, nuovi trailer, anteprime film, teaser, cinema, streaming, trailer film 2025, trailer serie tv">
+    <meta name="description"
+        content="Scopri tutti i trailer aggiornati di film e serie TV. Guarda le anteprime, esplora nuove uscite e trova cosa vedere oggi su Teaserly.it.">
+    <meta name="keywords"
+        content="trailer, film, serie TV, nuovi trailer, anteprime film, teaser, cinema, streaming, trailer film 2025, trailer serie tv">
     <meta name="author" content="Teaserly.it">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Teaserly - Tutti i Trailer di Film e Serie TV</title>
     <link rel="icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="icona-touch-apple.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!--ELIMINARE-->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3884558259497205"
-     crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
     <style>
         /* Reset e Stili Generali */
         :root {
@@ -712,7 +715,7 @@
             cursor: pointer;
         }
 
-         /* Donazione */
+        /* Donazione */
 
         .donation-section {
             background: linear-gradient(135deg, #1a1a1a, #333);
@@ -777,7 +780,6 @@
         .paypal-logo {
             height: 24px;
         }
-        
     </style>
 </head>
 
@@ -879,7 +881,8 @@
             <a href="pr_pol.html" target="_blank">Privacy Policy</a>
         </div>
         <div class="social-links">
-            <a href="https://www.instagram.com/_panichella.donato_/" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.instagram.com/_panichella.donato_/" target="_blank"><i
+                    class="fab fa-instagram"></i></a>
             <a href="https://www.youtube.com/@DON4TO__" target="_blank"><i class="fab fa-youtube"></i></a>
         </div>
         <p class="copyright">© 2025 Teaserly-Panichella. Tutti i diritti riservati.</p>
@@ -893,8 +896,35 @@
         </div>
     </div>
 
+    <!--ELIMINARE-->
+    <!-- Inizio del banner dei cookie -->
+    <div id="cookie-banner"
+        style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #333; color: white; text-align: center; padding: 10px; font-size: 14px; z-index: 9999;">
+        <p>
+            Questo sito utilizza cookie per migliorare l'esperienza di navigazione e per la pubblicità personalizzata.
+            <a href="https://www.cookiepolicygenerator.com/live.php?token=3Uj0DiWl7JcxNhYtbvhgA0kLMJvEJlUn"
+                target="_blank" style="color: #e50914;">Scopri di più</a>.
+        </p>
+        <button id="accept-cookies"
+            style="background-color: #e50914; color: white; border: none; padding: 8px 16px; cursor: pointer; font-size: 16px;">Accetto</button>
+    </div>
+    <!-- Fine del banner dei cookie -->
+
     <script src="tmdb.js"></script>
     <script>
+
+        /*ELIMINARE*/
+        // Controllo se l'utente ha già accettato i cookie
+        if (localStorage.getItem("cookies-accepted") === "true") {
+            document.getElementById("cookie-banner").style.display = "none";
+        }
+
+        // Funzione per accettare i cookie
+        document.getElementById("accept-cookies").addEventListener("click", function () {
+            localStorage.setItem("cookies-accepted", "true"); // Memorizza il consenso dell'utente
+            document.getElementById("cookie-banner").style.display = "none"; // Nasconde il banner
+        });
+
         // Mobile menu toggle
         const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
         const mobileSearchToggle = document.getElementById('mobile-search-toggle');

@@ -477,13 +477,6 @@
             animation: lineExpand 0.3s ease-out;
         }
 
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
         @keyframes lineExpand {
             from {
                 width: 0;
@@ -492,6 +485,13 @@
             to {
                 width: 100%;
             }
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         .social-links a {
@@ -1058,24 +1058,37 @@
 
         // Funzione per aprire il modal del trailer
         function openModal(trailerUrl) {
-            if (!trailerUrl) return;
+            if (!trailerUrl) {
+                alert("Trailer non disponibile per questo contenuto");
+                return;
+            }
+
             const modal = document.getElementById('trailer-modal');
             const iframe = document.getElementById('trailer-iframe');
 
-            // Estrai l'ID video sia da URL embed che watch
+            // Estrai l'ID video da vari formati URL YouTube
             let videoId;
-            if (trailerUrl.includes('embed/')) {
-                videoId = trailerUrl.split('embed/')[1].split('?')[0];
-            } else if (trailerUrl.includes('v=')) {
-                videoId = trailerUrl.split('v=')[1].split('&')[0];
-            } else {
-                // Se non è né embed né watch, prova a usare l'URL direttamente
-                videoId = trailerUrl;
-            }
+            try {
+                if (trailerUrl.includes('youtube.com/embed/')) {
+                    videoId = trailerUrl.split('youtube.com/embed/')[1].split('?')[0];
+                } else if (trailerUrl.includes('youtu.be/')) {
+                    videoId = trailerUrl.split('youtu.be/')[1].split('?')[0];
+                } else if (trailerUrl.includes('v=')) {
+                    videoId = trailerUrl.split('v=')[1].split('&')[0];
+                } else if (trailerUrl.match(/[a-zA-Z0-9_-]{11}/)) {
+                    // Se sembra già un ID YouTube (11 caratteri alfanumerici)
+                    videoId = trailerUrl.match(/[a-zA-Z0-9_-]{11}/)[0];
+                } else {
+                    throw new Error("Formato URL non riconosciuto");
+                }
 
-            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
-            modal.style.display = "flex";
-            document.body.style.overflow = "hidden";
+                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
+                modal.style.display = "flex";
+                document.body.style.overflow = "hidden";
+            } catch (e) {
+                console.error("Errore nell'analisi dell'URL del trailer:", e);
+                alert("Impossibile riprodurre il trailer: formato non supportato");
+            }
         }
 
         // Funzione per chiudere il modal
@@ -1153,13 +1166,50 @@
             }
         }
         // Gestisci il risultato della ricerca
-        function handleSearchResult(id, mediaType, trailerUrl) {
+        async function handleSearchResult(id, mediaType, trailerUrl) {
+            const modal = document.getElementById('trailer-modal');
+            const iframeContainer = document.querySelector('.modal-content');
+
             if (trailerUrl) {
                 openModal(trailerUrl);
             } else {
-                // Se non c'è trailer, cerca di ottenerlo
-                fetchTrailerForItem(id, mediaType);
+                // Mostra messaggio di caricamento
+                iframeContainer.innerHTML = `
+            <div style="color: white; text-align: center; padding: 20px;">
+                <div class="loading-spinner"></div>
+                <p>Sto cercando il trailer...</p>
+            </div>
+        `;
+                modal.style.display = "flex";
+                document.body.style.overflow = "hidden";
+
+                try {
+                    // Prova a ottenere il trailer
+                    const trailer = await TMDB.getTrailer(mediaType, id);
+
+                    if (trailer) {
+                        openModal(`https://www.youtube.com/watch?v=${trailer.key}`);
+                    } else {
+                        iframeContainer.innerHTML = `
+                    <div style="color: white; text-align: center; padding: 20px;">
+                        <h3>Trailer non disponibile</h3>
+                        <p>Non è stato trovato alcun trailer per questo contenuto.</p>
+                        <button onclick="closeModal()" style="background: #e50914; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px;">Chiudi</button>
+                    </div>
+                `;
+                    }
+                } catch (error) {
+                    console.error('Errore nel recupero del trailer:', error);
+                    iframeContainer.innerHTML = `
+                <div style="color: white; text-align: center; padding: 20px;">
+                    <h3>Errore nel recupero del trailer</h3>
+                    <p>Si è verificato un errore durante la ricerca del trailer.</p>
+                    <button onclick="closeModal()" style="background: #e50914; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px;">Chiudi</button>
+                </div>
+            `;
+                }
             }
+
             searchResults.style.display = 'none';
             searchInput.value = '';
         }

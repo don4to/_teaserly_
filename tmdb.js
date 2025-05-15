@@ -63,11 +63,19 @@ const TMDB = {
 
         if (!data || !data.results) return null;
 
-        // Cerca prima un trailer ufficiale, altrimenti prendi il primo trailer YouTube
+        // Cerca trailer in questo ordine:
+        // 1. Trailer ufficiale in italiano
+        // 2. Qualsiasi trailer ufficiale
+        // 3. Qualsiasi video di tipo "Trailer"
+        // 4. Il primo video disponibile
         return data.results.find(video =>
+            video.type === 'Trailer' && video.site === 'YouTube' && video.official && video.iso_639_1 === 'it'
+        ) || data.results.find(video =>
             video.type === 'Trailer' && video.site === 'YouTube' && video.official
         ) || data.results.find(video =>
             video.type === 'Trailer' && video.site === 'YouTube'
+        ) || data.results.find(video =>
+            video.site === 'YouTube'
         );
     },
 

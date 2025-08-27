@@ -10,8 +10,6 @@
             background-color: #141414;
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
         }
         .content-card:hover img {
             transform: scale(1.05);
@@ -19,123 +17,6 @@
         }
         .content-card img {
             transition: transform 0.3s ease;
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        /* Responsive Header */
-        header {
-            padding: 1rem 1.5rem;
-        }
-        nav {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        nav a {
-            font-size: 1rem;
-            margin: 0 0.5rem;
-        }
-        /* Hamburger Menu for Mobile */
-        #menuToggle {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        #navLinks {
-            display: flex;
-            align-items: center;
-        }
-        /* Search Input */
-        #searchInput {
-            padding: 0.5rem;
-            font-size: 0.9rem;
-            width: 100%;
-            max-width: 200px;
-        }
-        /* Main Content */
-        main {
-            padding-top: 5rem;
-            padding-bottom: 2rem;
-        }
-        /* Responsive Grid */
-        .grid {
-            display: grid;
-            gap: 1rem;
-            padding: 0 1rem;
-        }
-        /* Modal Styling */
-        #playerModal, #seriesModal {
-            padding: 1rem;
-        }
-        #playerModal .bg-gray-900, #seriesModal .bg-gray-900 {
-            width: 100%;
-            max-width: 95%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        #playerIframe {
-            height: 50vh;
-        }
-        /* Responsive Adjustments */
-        @media (max-width: 640px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            #menuToggle {
-                display: block;
-            }
-            #navLinks {
-                display: none;
-                flex-direction: column;
-                width: 100%;
-                margin-top: 1rem;
-            }
-            #navLinks.active {
-                display: flex;
-            }
-            nav a {
-                margin: 0.5rem 0;
-                font-size: 1.1rem;
-            }
-            #searchInput {
-                max-width: 100%;
-                margin-bottom: 0.5rem;
-            }
-            .content-card p {
-                font-size: 0.9rem;
-            }
-            #playerIframe {
-                height: 40vh;
-            }
-        }
-        @media (min-width: 641px) and (max-width: 768px) {
-            .grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            #playerIframe {
-                height: 45vh;
-            }
-        }
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        @media (min-width: 1025px) and (max-width: 1280px) {
-            .grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-        @media (min-width: 1281px) {
-            .grid {
-                grid-template-columns: repeat(6, 1fr);
-            }
         }
     </style>
 </head>
@@ -144,14 +25,11 @@
     <header class="bg-black py-4 px-6 flex items-center justify-between fixed top-0 left-0 right-0 z-10">
         <h1 class="text-red-600 text-3xl font-bold">MyFlix</h1>
         <nav class="flex items-center">
-            <span id="menuToggle" class="text-white md:hidden">☰</span>
-            <div id="navLinks" class="flex items-center">
-                <a href="#films" class="text-white mx-4 hover:text-red-600">Film</a>
-                <a href="#series" class="text-white mx-4 hover:text-red-600">Serie TV</a>
-                <div class="ml-4 flex items-center">
-                    <input id="searchInput" type="text" placeholder="Cerca..." class="bg-gray-800 text-white p-2 rounded">
-                    <button onclick="performSearch()" class="bg-red-600 text-white px-4 py-2 rounded ml-2">Cerca</button>
-                </div>
+            <a href="#films" class="text-white mx-4 hover:text-red-600">Film</a>
+            <a href="#series" class="text-white mx-4 hover:text-red-600">Serie TV</a>
+            <div class="ml-4">
+                <input id="searchInput" type="text" placeholder="Cerca..." class="bg-gray-800 text-white p-2 rounded">
+                <button onclick="performSearch()" class="bg-red-600 text-white px-4 py-2 rounded ml-2">Cerca</button>
             </div>
         </nav>
     </header>
@@ -213,12 +91,6 @@
         const IMG_BASE_URL = 'https://image.tmdb.org/t/p/w300';
         const VIXSRC_BASE_URL = 'https://vixsrc.to';
         const LANG = 'it-IT';
-
-        // Hamburger Menu Toggle
-        document.getElementById('menuToggle').addEventListener('click', () => {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('active');
-        });
 
         // Load Films
         async function loadFilms() {
@@ -353,4 +225,4 @@
         loadSeries();
     </script>
 </body>
-</html>
+</html> 

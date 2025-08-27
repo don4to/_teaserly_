@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyFlix - Film e Serie TV</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #141414;
+            color: white;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        .content-card:hover img {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        .content-card img {
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-black py-4 px-6 flex items-center justify-between fixed top-0 left-0 right-0 z-10">
+        <h1 class="text-red-600 text-3xl font-bold">MyFlix</h1>
+        <nav class="flex items-center">
+            <a href="#films" class="text-white mx-4 hover:text-red-600">Film</a>
+            <a href="#series" class="text-white mx-4 hover:text-red-600">Serie TV</a>
+            <div class="ml-4">
+                <input id="searchInput" type="text" placeholder="Cerca..." class="bg-gray-800 text-white p-2 rounded">
+                <button onclick="performSearch()" class="bg-red-600 text-white px-4 py-2 rounded ml-2">Cerca</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-20">
+        <!-- Search Results Section -->
+        <section id="searchResults" class="mb-12 hidden">
+            <h2 class="text-2xl font-bold mb-4">Risultati della Ricerca</h2>
+            <div id="searchGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+        </section>
+
+        <!-- Films Section -->
+        <section id="films" class="mb-12">
+            <h2 class="text-2xl font-bold mb-4">Film Disponibili</h2>
+            <div id="filmsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+        </section>
+
+        <!-- Series Section -->
+        <section id="series" class="mb-12">
+            <h2 class="text-2xl font-bold mb-4">Serie TV Disponibili</h2>
+            <div id="seriesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+        </section>
+    </main>
+
+    <!-- Player Modal -->
+    <div id="playerModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-50">
+        <div class="bg-gray-900 p-6 rounded-lg w-full max-w-4xl h-3/4">
+            <h3 id="modalTitle" class="text-xl font-bold mb-4"></h3>
+            <iframe id="playerIframe" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+            <div class="flex justify-end mt-4">
+                <button class="bg-gray-600 text-white px-4 py-2 rounded" onclick="closePlayerModal()">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Series Selection Modal -->
+    <div id="seriesModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-50">
+        <div class="bg-gray-900 p-6 rounded-lg w-full max-w-md">
+            <h3 id="seriesModalTitle" class="text-xl font-bold mb-4"></h3>
+            <div class="mb-4">
+                <label for="seasonSelect" class="block text-sm mb-2">Seleziona Stagione</label>
+                <select id="seasonSelect" class="w-full bg-gray-800 text-white p-2 rounded" onchange="loadEpisodes()"></select>
+            </div>
+            <div class="mb-4">
+                <label for="episodeSelect" class="block text-sm mb-2">Seleziona Episodio</label>
+                <select id="episodeSelect" class="w-full bg-gray-800 text-white p-2 rounded"></select>
+            </div>
+            <div class="flex justify-end">
+                <button class="bg-red-600 text-white px-4 py-2 rounded mr-2" onclick="playEpisode()">Guarda</button>
+                <button class="bg-gray-600 text-white px-4 py-2 rounded" onclick="closeSeriesModal()">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TMDB_API_KEY = '93648c872be3879cbab3623bdf67763b';
+        const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+        const IMG_BASE_URL = 'https://image.tmdb.org/t/p/w300';
+        const VIXSRC_BASE_URL = 'https://vixsrc.to';
+        const LANG = 'it-IT';
+
+        // Load Films
+        async function loadFilms() {
+            const res = await fetch(`${VIXSRC_BASE_URL}/api/list/movie`);
+            const ids = await res.json();
+            const displayIds = ids.slice(0, 50); // Limit to first 50 for performance
+            const filmsGrid = document.getElementById('filmsGrid');
+            filmsGrid.innerHTML = '';
+            const promises = displayIds.map(item => fetch(`${TMDB_BASE_URL}/movie/${item.tmdb_id}?api_key=${TMDB_API_KEY}&language=${LANG}`));
+            const responses = await Promise.all(promises);
+            const movies = await Promise.all(responses.map(r => r.json()));
+            movies.forEach(movie => {
+                if (movie.poster_path) {
+                    const card = createCard(movie.title, `${IMG_BASE_URL}${movie.poster_path}`, movie.id, 'movie');
+                    filmsGrid.appendChild(card);
+                }
+            });
+        }
+
+        // Load Series
+        async function loadSeries() {
+            const res = await fetch(`${VIXSRC_BASE_URL}/api/list/tv`);
+            const ids = await res.json();
+            const displayIds = ids.slice(0, 50); // Limit to first 50 for performance
+            const seriesGrid = document.getElementById('seriesGrid');
+            seriesGrid.innerHTML = '';
+            const promises = displayIds.map(item => fetch(`${TMDB_BASE_URL}/tv/${item.tmdb_id}?api_key=${TMDB_API_KEY}&language=${LANG}`));
+            const responses = await Promise.all(promises);
+            const series = await Promise.all(responses.map(r => r.json()));
+            series.forEach(show => {
+                if (show.poster_path) {
+                    const card = createCard(show.name, `${IMG_BASE_URL}${show.poster_path}`, show.id, 'tv');
+                    seriesGrid.appendChild(card);
+                }
+            });
+        }
+
+        // Create Card Element
+        function createCard(title, poster, id, type) {
+            const div = document.createElement('div');
+            div.className = 'content-card cursor-pointer';
+            div.innerHTML = `
+                <img src="${poster}" alt="${title}" class="w-full rounded">
+                <p class="text-center mt-2">${title}</p>
+            `;
+            div.onclick = () => type === 'movie' ? openPlayerModal(title, `${VIXSRC_BASE_URL}/movie/${id}?lang=it`) : openSeriesModal(title, id);
+            return div;
+        }
+
+        // Search Function
+        async function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) return;
+            const res = await fetch(`${TMDB_BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=${LANG}`);
+            const data = await res.json();
+            const results = data.results.filter(item => item.media_type === 'movie' || item.media_type === 'tv');
+            const searchGrid = document.getElementById('searchGrid');
+            searchGrid.innerHTML = '';
+            results.forEach(item => {
+                if (item.poster_path) {
+                    const title = item.title || item.name;
+                    const type = item.media_type === 'movie' ? 'movie' : 'tv';
+                    const card = createCard(title, `${IMG_BASE_URL}${item.poster_path}`, item.id, type);
+                    searchGrid.appendChild(card);
+                }
+            });
+            document.getElementById('searchResults').classList.remove('hidden');
+        }
+
+        // Open Player Modal for Movies
+        function openPlayerModal(title, src) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('playerIframe').src = src;
+            document.getElementById('playerModal').classList.remove('hidden');
+        }
+
+        function closePlayerModal() {
+            document.getElementById('playerModal').classList.add('hidden');
+            document.getElementById('playerIframe').src = '';
+        }
+
+        // Open Series Modal
+        async function openSeriesModal(title, id) {
+            document.getElementById('seriesModalTitle').textContent = title;
+            document.getElementById('seriesModal').dataset.id = id;
+            document.getElementById('seriesModal').classList.remove('hidden');
+            const res = await fetch(`${TMDB_BASE_URL}/tv/${id}?api_key=${TMDB_API_KEY}&language=${LANG}`);
+            const data = await res.json();
+            const seasonSelect = document.getElementById('seasonSelect');
+            seasonSelect.innerHTML = '';
+            for (let i = 1; i <= data.number_of_seasons; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Stagione ${i}`;
+                seasonSelect.appendChild(option);
+            }
+            loadEpisodes();
+        }
+
+        function closeSeriesModal() {
+            document.getElementById('seriesModal').classList.add('hidden');
+        }
+
+        // Load Episodes for Selected Season
+        async function loadEpisodes() {
+            const id = document.getElementById('seriesModal').dataset.id;
+            const season = document.getElementById('seasonSelect').value;
+            const res = await fetch(`${TMDB_BASE_URL}/tv/${id}/season/${season}?api_key=${TMDB_API_KEY}&language=${LANG}`);
+            const data = await res.json();
+            const episodeSelect = document.getElementById('episodeSelect');
+            episodeSelect.innerHTML = '';
+            data.episodes.forEach(episode => {
+                const option = document.createElement('option');
+                option.value = episode.episode_number;
+                option.textContent = `Episodio ${episode.episode_number}: ${episode.name}`;
+                episodeSelect.appendChild(option);
+            });
+        }
+
+        // Play Selected Episode
+        function playEpisode() {
+            const id = document.getElementById('seriesModal').dataset.id;
+            const season = document.getElementById('seasonSelect').value;
+            const episode = document.getElementById('episodeSelect').value;
+            const title = document.getElementById('seriesModalTitle').textContent;
+            closeSeriesModal();
+            openPlayerModal(`${title} - S${season}E${episode}`, `${VIXSRC_BASE_URL}/tv/${id}/${season}/${episode}?lang=it`);
+        }
+
+        // Initial Load
+        loadFilms();
+        loadSeries();
+    </script>
+</body>
+</html>

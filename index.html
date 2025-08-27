@@ -805,35 +805,52 @@
         .paypal-logo {
             height: 24px;
         }
+        .Logo {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spazio tra il logo e il link */
+}
+
+.logo-link {
+    color: var(--light-color);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.logo-link:hover {
+    color: var(--primary-color); /* Colore al passaggio del mouse, coerente con il tema */
+}
     </style>
 </head>
 
 <body>
     <header>
-        <div class="Logo">
-            <a href="#home"><img src="logo.png" alt="logo" /></a>
-        </div>
+    <div class="Logo">
+        <a href="#home"><img src="logo.png" alt="logo" /></a>
+        <a href="1.html" class="logo-link">MyFlix</a> <!-- Aggiunto il link al file 1.html -->
+    </div>
 
-        <button class="mobile-menu-toggle" id="mobile-menu-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
-        <button class="mobile-search-toggle" id="mobile-search-toggle">
-            <i class="fas fa-search"></i>
-        </button>
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <button class="mobile-search-toggle" id="mobile-search-toggle">
+        <i class="fas fa-search"></i>
+    </button>
 
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="Cerca film o serie TV..." id="search-input">
-            <button class="search-button" id="search-button"><i class="fas fa-search"></i></button>
-            <div class="search-results" id="search-results"></div>
-        </div>
-        <nav class="Link">
-            <a href="#home" class="active"><i class="fas fa-home"></i> Home</a>
-            <a href="#film"><i class="fas fa-film"></i> Film</a>
-            <a href="#serietv"><i class="fas fa-tv"></i> Serie TV</a>
-            <a href="#trailer"><i class="fas fa-play"></i> Tutti i Trailer</a>
-        </nav>
-    </header>
-
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="Cerca film o serie TV..." id="search-input">
+        <button class="search-button" id="search-button"><i class="fas fa-search"></i></button>
+        <div class="search-results" id="search-results"></div>
+    </div>
+    <nav class="Link">
+        <a href="#home" class="active"><i class="fas fa-home"></i> Home</a>
+        <a href="#film"><i class="fas fa-film"></i> Film</a>
+        <a href="#serietv"><i class="fas fa-tv"></i> Serie TV</a>
+        <a href="#trailer"><i class="fas fa-play"></i> Tutti i Trailer</a>
+    </nav>
+</header>
     <!-- Hero Section -->
     <section class="hero" id="home">
         <h1>Scopri i migliori trailer</h1>
@@ -1304,4 +1321,5 @@
 </body>
 
 </html>
+
 

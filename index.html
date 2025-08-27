@@ -809,28 +809,22 @@
 </head>
 
 <body>
-    <header>
-        <div class="Logo">
-            <a href="#home"><img src="logo.png" alt="logo" /></a>
+    <!-- Header -->
+    <header class="bg-black py-4 px-6 flex items-center justify-between fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center">
+            <h1 class="text-red-600 text-3xl font-bold">MyFlix</h1>
+            <!-- Aggiunta del link affianco al logo -->
+            <a href="https://teaserly.it" class="ml-4 text-white hover:text-red-600 font-medium" target="_blank">
+                Vedi su Teaserly
+            </a>
         </div>
-
-        <button class="mobile-menu-toggle" id="mobile-menu-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
-        <button class="mobile-search-toggle" id="mobile-search-toggle">
-            <i class="fas fa-search"></i>
-        </button>
-
-        <div class="search-container">
-            <input type="text" class="search-input" placeholder="Cerca film o serie TV..." id="search-input">
-            <button class="search-button" id="search-button"><i class="fas fa-search"></i></button>
-            <div class="search-results" id="search-results"></div>
-        </div>
-        <nav class="Link">
-            <a href="#home" class="active"><i class="fas fa-home"></i> Home</a>
-            <a href="#film"><i class="fas fa-film"></i> Film</a>
-            <a href="#serietv"><i class="fas fa-tv"></i> Serie TV</a>
-            <a href="#trailer"><i class="fas fa-play"></i> Tutti i Trailer</a>
+        <nav class="flex items-center">
+            <a href="#films" class="text-white mx-4 hover:text-red-600">Film</a>
+            <a href="#series" class="text-white mx-4 hover:text-red-600">Serie TV</a>
+            <div class="ml-4">
+                <input id="searchInput" type="text" placeholder="Cerca..." class="bg-gray-800 text-white p-2 rounded">
+                <button onclick="performSearch()" class="bg-red-600 text-white px-4 py-2 rounded ml-2">Cerca</button>
+            </div>
         </nav>
     </header>
 
@@ -1304,3 +1298,4 @@
 </body>
 
 </html>
+

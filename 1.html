@@ -296,12 +296,72 @@
                 padding-right: 40px;
             }
         }
+        
+        /* Nuovi stili per episodi con copertina */
+        .episode-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #2a2a2a;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .episode-item:hover {
+            background-color: #2a2a2a;
+        }
+        
+        .episode-item img {
+            width: 80px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+        
+        .episode-info {
+            flex: 1;
+        }
+        
+        .episode-title {
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        
+        .episode-number {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        /* Modal player ingrandito */
+        #playerModal > div {
+            width: 95%;
+            max-width: 95vw;
+            height: 85vh;
+        }
+        
+        #playerIframe {
+            width: 100%;
+            height: calc(100% - 60px);
+        }
+        
+        /* Stile per la selezione episodi */
+        #episodeSelect {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        /* Rimuovere lo stile predefinito delle option */
+        #episodeSelect option {
+            background: #1a1a1a;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header class="bg-black py-4 px-6 flex items-center justify-between fixed top-0 left-0 right-0 z-10">
-        <h1 class="text-red-600 text-3xl font-bold">MyFlix</h1>
+        <a href="1.html"><h1 class="text-red-600 text-3xl font-bold">MyFlix</h1></a>
         <nav class="flex items-center">
             <a href="#films" class="text-white mx-4 hover:text-red-600">Film</a>
             <a href="#series" class="text-white mx-4 hover:text-red-600">Serie TV</a>
@@ -338,31 +398,32 @@
         </section>
     </main>
 
-    <!-- Player Modal -->
-    <div id="playerModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-50">
-        <div class="bg-gray-900 p-6 rounded-lg w-full max-w-4xl h-3/4">
-            <h3 id="modalTitle" class="text-xl font-bold mb-4"></h3>
-            <iframe id="playerIframe" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
-            <div class="flex justify-end mt-4">
-                <button class="bg-gray-600 text-white px-4 py-2 rounded" onclick="closePlayerModal()">Chiudi</button>
+    <!-- Player Modal (Ingrandito) -->
+    <div id="playerModal" class="fixed inset-0 bg-black bg-opacity-90 hidden flex items-center justify-center z-50">
+        <div class="bg-gray-900 p-6 rounded-lg w-full max-w-6xl h-5/6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="text-xl font-bold"></h3>
+                <button class="bg-gray-600 text-white px-4 py-2 rounded text-sm" onclick="closePlayerModal()">
+                    <i class="fas fa-times"></i> Chiudi
+                </button>
             </div>
+            <iframe id="playerIframe" class="w-full h-full" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>
         </div>
     </div>
 
     <!-- Series Selection Modal -->
     <div id="seriesModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-50">
-        <div class="bg-gray-900 p-6 rounded-lg w-full max-w-md">
+        <div class="bg-gray-900 p-6 rounded-lg w-full max-w-2xl">
             <h3 id="seriesModalTitle" class="text-xl font-bold mb-4"></h3>
             <div class="mb-4">
                 <label for="seasonSelect" class="block text-sm mb-2">Seleziona Stagione</label>
                 <select id="seasonSelect" class="w-full bg-gray-800 text-white p-2 rounded" onchange="loadEpisodes()"></select>
             </div>
             <div class="mb-4">
-                <label for="episodeSelect" class="block text-sm mb-2">Seleziona Episodio</label>
-                <select id="episodeSelect" class="w-full bg-gray-800 text-white p-2 rounded"></select>
+                <label class="block text-sm mb-2">Seleziona Episodio</label>
+                <div id="episodesContainer" class="max-h-96 overflow-y-auto border border-gray-700 rounded"></div>
             </div>
-            <div class="flex justify-end">
-                <button class="bg-red-600 text-white px-4 py-2 rounded mr-2" onclick="playEpisode()">Guarda</button>
+            <div class="flex justify-end mt-4">
                 <button class="bg-gray-600 text-white px-4 py-2 rounded" onclick="closeSeriesModal()">Chiudi</button>
             </div>
         </div>
@@ -518,11 +579,22 @@
             document.getElementById('modalTitle').textContent = title;
             document.getElementById('playerIframe').src = src;
             document.getElementById('playerModal').classList.remove('hidden');
+            // Aggiungi listener per chiudere modal con ESC
+            document.addEventListener('keydown', handleEscKey);
         }
 
         function closePlayerModal() {
             document.getElementById('playerModal').classList.add('hidden');
             document.getElementById('playerIframe').src = '';
+            // Rimuovi listener
+            document.removeEventListener('keydown', handleEscKey);
+        }
+
+        // Gestione tasto ESC per chiudere modale
+        function handleEscKey(event) {
+            if (event.key === 'Escape') {
+                closePlayerModal();
+            }
         }
 
         // Open Series Modal
@@ -547,30 +619,44 @@
             document.getElementById('seriesModal').classList.add('hidden');
         }
 
-        // Load Episodes for Selected Season
+        // Load Episodes for Selected Season con immagini
         async function loadEpisodes() {
             const id = document.getElementById('seriesModal').dataset.id;
             const season = document.getElementById('seasonSelect').value;
             const res = await fetch(`${TMDB_BASE_URL}/tv/${id}/season/${season}?api_key=${TMDB_API_KEY}&language=${LANG}`);
             const data = await res.json();
-            const episodeSelect = document.getElementById('episodeSelect');
-            episodeSelect.innerHTML = '';
+            const episodesContainer = document.getElementById('episodesContainer');
+            episodesContainer.innerHTML = '';
+            
             data.episodes.forEach(episode => {
-                const option = document.createElement('option');
-                option.value = episode.episode_number;
-                option.textContent = `Episodio ${episode.episode_number}: ${episode.name}`;
-                episodeSelect.appendChild(option);
+                const episodeItem = document.createElement('div');
+                episodeItem.className = 'episode-item';
+                episodeItem.dataset.episodeNumber = episode.episode_number;
+                
+                // Usa l'immagine dell'episodio se disponibile, altrimenti una placeholder
+                const episodeImage = episode.still_path 
+                    ? `${IMG_BASE_URL}${episode.still_path}` 
+                    : 'https://via.placeholder.com/80x45/333/999999?text=No+Image';
+                
+                episodeItem.innerHTML = `
+                    <img src="${episodeImage}" alt="${episode.name}">
+                    <div class="episode-info">
+                        <div class="episode-title">${episode.name || 'Episodio senza titolo'}</div>
+                        <div class="episode-number">Episodio ${episode.episode_number}</div>
+                    </div>
+                `;
+                
+                episodeItem.onclick = () => {
+                    const title = document.getElementById('seriesModalTitle').textContent;
+                    closeSeriesModal();
+                    openPlayerModal(
+                        `${title} - S${season}E${episode.episode_number}`,
+                        `${VIXSRC_BASE_URL}/tv/${id}/${season}/${episode.episode_number}?lang=it`
+                    );
+                };
+                
+                episodesContainer.appendChild(episodeItem);
             });
-        }
-
-        // Play Selected Episode
-        function playEpisode() {
-            const id = document.getElementById('seriesModal').dataset.id;
-            const season = document.getElementById('seasonSelect').value;
-            const episode = document.getElementById('episodeSelect').value;
-            const title = document.getElementById('seriesModalTitle').textContent;
-            closeSeriesModal();
-            openPlayerModal(`${title} - S${season}E${episode}`, `${VIXSRC_BASE_URL}/tv/${id}/${season}/${episode}?lang=it`);
         }
 
         // Initial Load

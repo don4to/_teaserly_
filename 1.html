@@ -258,6 +258,11 @@
         .search-result-title {
             font-weight: bold;
             font-size: 0.9rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
         }
         
         .search-result-type {
@@ -326,6 +331,11 @@
         .episode-title {
             font-weight: bold;
             font-size: 0.95rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
         }
         
         .episode-number {
@@ -356,6 +366,72 @@
             background: #1a1a1a;
             padding: 0;
         }
+
+        /* Loading states */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #e50914;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background-color: #2d2d2d;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            color: #ff6b6b;
+        }
+        
+        /* Stile per il refresh automatico */
+        .auto-refresh-info {
+            background-color: rgba(229, 9, 20, 0.1);
+            border-left: 4px solid #e50914;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .refresh-button {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .refresh-button:hover {
+            background-color: #f40612;
+        }
+        
+        .alternative-proxy-message {
+            background-color: #2a2a2a;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
     </style>
 </head>
 <body>
@@ -379,6 +455,14 @@
 
     <!-- Main Content -->
     <main class="container mx-auto px-6 py-20">
+        <!-- Auto Refresh Info -->
+        <div id="refreshInfo" class="auto-refresh-info hidden">
+            <p>I contenuti vengono aggiornati automaticamente ogni 30 minuti. Ultimo aggiornamento: <span id="lastUpdateTime">-</span></p>
+            <button class="refresh-button" onclick="manualRefresh()">
+                <i class="fas fa-sync-alt"></i> Aggiorna ora
+            </button>
+        </div>
+
         <!-- Search Results Section -->
         <section id="searchResults" class="mb-12 hidden">
             <h2 class="text-2xl font-bold mb-4">Risultati della Ricerca</h2>
@@ -388,13 +472,21 @@
         <!-- Films Section -->
         <section id="films" class="mb-12">
             <h2 class="text-2xl font-bold mb-4">Film Disponibili</h2>
-            <div id="filmsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+            <div id="filmsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
         </section>
 
         <!-- Series Section -->
         <section id="series" class="mb-12">
             <h2 class="text-2xl font-bold mb-4">Serie TV Disponibili</h2>
-            <div id="seriesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+            <div id="seriesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <div class="loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -436,49 +528,141 @@
         const VIXSRC_BASE_URL = 'https://vixsrc.to';
         const LANG = 'it-IT';
         
+        // Lista di proxy CORS alternativi da provare
+        const CORS_PROXIES = [
+            'https://corsproxy.io/?',
+            'https://api.codetabs.com/v1/proxy?quest=',
+            'https://cors-anywhere.herokuapp.com/',
+            'https://thingproxy.freeboard.io/fetch/'
+        ];
+        
         let searchTimeout;
+        let refreshInterval;
+        let lastUpdateTime = null;
+        let currentProxyIndex = 0;
+
+        // Funzione per fare richieste con gestione CORS (solo per API, non per il player)
+        async function makeRequest(url, options = {}, useProxy = true, retryCount = 0) {
+            try {
+                // Usa il proxy CORS solo per le richieste API, non per il player
+                if (useProxy && (url.includes('vixsrc.to/api') || url.includes('api.themoviedb.org'))) {
+                    const proxyUrl = CORS_PROXIES[currentProxyIndex] + encodeURIComponent(url);
+                    console.log(`Using proxy: ${CORS_PROXIES[currentProxyIndex]}`);
+                    url = proxyUrl;
+                }
+                
+                const response = await fetch(url, options);
+                
+                if (!response.ok) {
+                    // Se riceviamo un 403, proviamo con un proxy diverso
+                    if (response.status === 403 && retryCount < CORS_PROXIES.length - 1) {
+                        console.warn(`Proxy ${CORS_PROXIES[currentProxyIndex]} failed with 403, trying next proxy...`);
+                        currentProxyIndex = (currentProxyIndex + 1) % CORS_PROXIES.length;
+                        return makeRequest(url, options, useProxy, retryCount + 1);
+                    }
+                    throw new Error(`Errore HTTP: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Errore nella richiesta:', error);
+                
+                // Se c'è un errore e ci sono ancora proxy da provare
+                if (retryCount < CORS_PROXIES.length - 1) {
+                    console.warn(`Request failed, trying next proxy...`);
+                    currentProxyIndex = (currentProxyIndex + 1) % CORS_PROXIES.length;
+                    return makeRequest(url, options, useProxy, retryCount + 1);
+                }
+                
+                throw error;
+            }
+        }
 
         // Load Films
         async function loadFilms() {
             try {
-                const res = await fetch(`${VIXSRC_BASE_URL}/api/list/movie`);
-                const ids = await res.json();
-                const displayIds = ids.slice(0, 50); // Limit to first 50 for performance
                 const filmsGrid = document.getElementById('filmsGrid');
                 filmsGrid.innerHTML = '';
-                const promises = displayIds.map(item => fetch(`${TMDB_BASE_URL}/movie/${item.tmdb_id}?api_key=${TMDB_API_KEY}&language=${LANG}`));
-                const responses = await Promise.all(promises);
-                const movies = await Promise.all(responses.map(r => r.json()));
-                movies.forEach(movie => {
+                
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'loading col-span-full';
+                loadingDiv.innerHTML = '<div class="spinner"></div>';
+                filmsGrid.appendChild(loadingDiv);
+                
+                // Carica un set predefinito di film popolari da TMDB come fallback
+                const popularMovies = await makeRequest(`${TMDB_BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&language=${LANG}&page=1`);
+                
+                filmsGrid.innerHTML = '';
+                
+                popularMovies.results.slice(0, 18).forEach(movie => {
                     if (movie.poster_path) {
                         const card = createCard(movie.title, `${IMG_BASE_URL}${movie.poster_path}`, movie.id, 'movie');
                         filmsGrid.appendChild(card);
                     }
                 });
+                
+                if (filmsGrid.children.length === 0) {
+                    filmsGrid.innerHTML = `
+                        <div class="error-message col-span-full">
+                            <p>Impossibile caricare i film. Riprova più tardi.</p>
+                        </div>
+                    `;
+                }
             } catch (error) {
                 console.error('Error loading films:', error);
+                const filmsGrid = document.getElementById('filmsGrid');
+                filmsGrid.innerHTML = `
+                    <div class="error-message col-span-full">
+                        <p>Errore nel caricamento dei film: ${error.message}</p>
+                        <div class="alternative-proxy-message">
+                            <p>Problema di connessione con i server. Riprova più tardi o aggiorna la pagina.</p>
+                        </div>
+                    </div>
+                `;
             }
         }
 
         // Load Series
         async function loadSeries() {
             try {
-                const res = await fetch(`${VIXSRC_BASE_URL}/api/list/tv`);
-                const ids = await res.json();
-                const displayIds = ids.slice(0, 50); // Limit to first 50 for performance
                 const seriesGrid = document.getElementById('seriesGrid');
                 seriesGrid.innerHTML = '';
-                const promises = displayIds.map(item => fetch(`${TMDB_BASE_URL}/tv/${item.tmdb_id}?api_key=${TMDB_API_KEY}&language=${LANG}`));
-                const responses = await Promise.all(promises);
-                const series = await Promise.all(responses.map(r => r.json()));
-                series.forEach(show => {
+                
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'loading col-span-full';
+                loadingDiv.innerHTML = '<div class="spinner"></div>';
+                seriesGrid.appendChild(loadingDiv);
+                
+                // Carica un set predefinito di serie TV popolari da TMDB come fallback
+                const popularSeries = await makeRequest(`${TMDB_BASE_URL}/tv/popular?api_key=${TMDB_API_KEY}&language=${LANG}&page=1`);
+                
+                seriesGrid.innerHTML = '';
+                
+                popularSeries.results.slice(0, 18).forEach(show => {
                     if (show.poster_path) {
                         const card = createCard(show.name, `${IMG_BASE_URL}${show.poster_path}`, show.id, 'tv');
                         seriesGrid.appendChild(card);
                     }
                 });
+                
+                if (seriesGrid.children.length === 0) {
+                    seriesGrid.innerHTML = `
+                        <div class="error-message col-span-full">
+                            <p>Impossibile caricare le serie TV. Riprova più tardi.</p>
+                        </div>
+                    `;
+                }
             } catch (error) {
                 console.error('Error loading series:', error);
+                const seriesGrid = document.getElementById('seriesGrid');
+                seriesGrid.innerHTML = `
+                    <div class="error-message col-span-full">
+                        <p>Errore nel caricamento delle serie TV: ${error.message}</p>
+                        <div class="alternative-proxy-message">
+                            <p>Problema di connessione con i server. Riprova più tardi o aggiorna la pagina.</p>
+                        </div>
+                    </div>
+                `;
             }
         }
 
@@ -509,8 +693,7 @@
             
             searchTimeout = setTimeout(async () => {
                 try {
-                    const res = await fetch(`${TMDB_BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=${LANG}`);
-                    const data = await res.json();
+                    const data = await makeRequest(`${TMDB_BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=${LANG}`);
                     const results = data.results.filter(item => (item.media_type === 'movie' || item.media_type === 'tv') && item.poster_path);
                     
                     if (results.length === 0) {
@@ -574,10 +757,13 @@
             }
         });
 
-        // Open Player Modal for Movies
+        // Open Player Modal for Movies - SENZA CORS PROXY per la riproduzione
         function openPlayerModal(title, src) {
             document.getElementById('modalTitle').textContent = title;
+            
+            // NON usare il proxy CORS per il player, solo URL diretto
             document.getElementById('playerIframe').src = src;
+            
             document.getElementById('playerModal').classList.remove('hidden');
             // Aggiungi listener per chiudere modal con ESC
             document.addEventListener('keydown', handleEscKey);
@@ -602,17 +788,28 @@
             document.getElementById('seriesModalTitle').textContent = title;
             document.getElementById('seriesModal').dataset.id = id;
             document.getElementById('seriesModal').classList.remove('hidden');
-            const res = await fetch(`${TMDB_BASE_URL}/tv/${id}?api_key=${TMDB_API_KEY}&language=${LANG}`);
-            const data = await res.json();
-            const seasonSelect = document.getElementById('seasonSelect');
-            seasonSelect.innerHTML = '';
-            for (let i = 1; i <= data.number_of_seasons; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `Stagione ${i}`;
-                seasonSelect.appendChild(option);
+            
+            try {
+                const data = await makeRequest(`${TMDB_BASE_URL}/tv/${id}?api_key=${TMDB_API_KEY}&language=${LANG}`);
+                const seasonSelect = document.getElementById('seasonSelect');
+                seasonSelect.innerHTML = '';
+                
+                for (let i = 1; i <= data.number_of_seasons; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = `Stagione ${i}`;
+                    seasonSelect.appendChild(option);
+                }
+                
+                loadEpisodes();
+            } catch (error) {
+                console.error('Error loading series details:', error);
+                document.getElementById('episodesContainer').innerHTML = `
+                    <div class="error-message">
+                        <p>Errore nel caricamento dei dettagli della serie.</p>
+                    </div>
+                `;
             }
-            loadEpisodes();
         }
 
         function closeSeriesModal() {
@@ -623,45 +820,82 @@
         async function loadEpisodes() {
             const id = document.getElementById('seriesModal').dataset.id;
             const season = document.getElementById('seasonSelect').value;
-            const res = await fetch(`${TMDB_BASE_URL}/tv/${id}/season/${season}?api_key=${TMDB_API_KEY}&language=${LANG}`);
-            const data = await res.json();
-            const episodesContainer = document.getElementById('episodesContainer');
-            episodesContainer.innerHTML = '';
             
-            data.episodes.forEach(episode => {
-                const episodeItem = document.createElement('div');
-                episodeItem.className = 'episode-item';
-                episodeItem.dataset.episodeNumber = episode.episode_number;
+            try {
+                const data = await makeRequest(`${TMDB_BASE_URL}/tv/${id}/season/${season}?api_key=${TMDB_API_KEY}&language=${LANG}`);
+                const episodesContainer = document.getElementById('episodesContainer');
+                episodesContainer.innerHTML = '';
                 
-                // Usa l'immagine dell'episodio se disponibile, altrimenti una placeholder
-                const episodeImage = episode.still_path 
-                    ? `${IMG_BASE_URL}${episode.still_path}` 
-                    : 'https://via.placeholder.com/80x45/333/999999?text=No+Image';
-                
-                episodeItem.innerHTML = `
-                    <img src="${episodeImage}" alt="${episode.name}">
-                    <div class="episode-info">
-                        <div class="episode-title">${episode.name || 'Episodio senza titolo'}</div>
-                        <div class="episode-number">Episodio ${episode.episode_number}</div>
+                data.episodes.forEach(episode => {
+                    const episodeItem = document.createElement('div');
+                    episodeItem.className = 'episode-item';
+                    episodeItem.dataset.episodeNumber = episode.episode_number;
+                    
+                    // Usa l'immagine dell'episodio se disponibile, altrimenti una placeholder
+                    const episodeImage = episode.still_path 
+                        ? `${IMG_BASE_URL}${episode.still_path}` 
+                        : 'https://via.placeholder.com/80x45/333/999999?text=No+Image';
+                    
+                    episodeItem.innerHTML = `
+                        <img src="${episodeImage}" alt="${episode.name}">
+                        <div class="episode-info">
+                            <div class="episode-title">${episode.name || 'Episodio senza titolo'}</div>
+                            <div class="episode-number">Episodio ${episode.episode_number}</div>
+                        </div>
+                    `;
+                    
+                    episodeItem.onclick = () => {
+                        const title = document.getElementById('seriesModalTitle').textContent;
+                        closeSeriesModal();
+                        openPlayerModal(
+                            `${title} - S${season}E${episode.episode_number}`,
+                            `${VIXSRC_BASE_URL}/tv/${id}/${season}/${episode.episode_number}?lang=it`
+                        );
+                    };
+                    
+                    episodesContainer.appendChild(episodeItem);
+                });
+            } catch (error) {
+                console.error('Error loading episodes:', error);
+                document.getElementById('episodesContainer').innerHTML = `
+                    <div class="error-message">
+                        <p>Errore nel caricamento degli episodi.</p>
                     </div>
                 `;
-                
-                episodeItem.onclick = () => {
-                    const title = document.getElementById('seriesModalTitle').textContent;
-                    closeSeriesModal();
-                    openPlayerModal(
-                        `${title} - S${season}E${episode.episode_number}`,
-                        `${VIXSRC_BASE_URL}/tv/${id}/${season}/${episode.episode_number}?lang=it`
-                    );
-                };
-                
-                episodesContainer.appendChild(episodeItem);
-            });
+            }
+        }
+
+        // Funzione per aggiornare tutti i contenuti
+        async function refreshAllContent() {
+            console.log("Aggiornamento contenuti in corso...");
+            document.getElementById('refreshInfo').classList.remove('hidden');
+            document.getElementById('lastUpdateTime').textContent = new Date().toLocaleTimeString();
+            
+            await loadFilms();
+            await loadSeries();
+            
+            lastUpdateTime = new Date();
+            console.log("Contenuti aggiornati alle:", lastUpdateTime.toLocaleTimeString());
+        }
+
+        // Aggiornamento manuale
+        function manualRefresh() {
+            refreshAllContent();
+        }
+
+        // Inizializza l'aggiornamento periodico
+        function initAutoRefresh() {
+            // Aggiorna ogni 30 minuti (1800000 ms)
+            refreshInterval = setInterval(refreshAllContent, 1800000);
+            
+            // Aggiorna anche all'avvio
+            setTimeout(refreshAllContent, 1000);
         }
 
         // Initial Load
-        loadFilms();
-        loadSeries();
+        document.addEventListener('DOMContentLoaded', function() {
+            initAutoRefresh();
+        });
     </script>
 </body>
 </html>

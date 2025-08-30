@@ -623,7 +623,12 @@
 
         <!-- Continue Watching Section -->
         <section id="continue" class="mb-12">
-            <h2 class="text-2xl font-bold mb-4">Continua a guardare</h2>
+            <div class="section-header">
+                <h2 class="text-2xl font-bold">Continua a guardare</h2>
+                <button class="clear-all-button" onclick="clearAllContinueWatching()">
+                    <i class="fas fa-trash"></i> Pulisci tutto
+                </button>
+            </div>
             <div id="continueGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 <div class="text-center py-8 text-gray-500">
                     <i class="fas fa-history text-4xl mb-2"></i>
@@ -709,6 +714,12 @@
         </div>
     </div>
 
+    <!-- Completion Toast -->
+    <div id="completionToast" class="completion-toast hidden">
+        <i class="fas fa-check-circle"></i>
+        <span id="completionMessage">Contenuto completato e rimosso da "Continua a guardare"</span>
+    </div>
+
     <script>
         const TMDB_API_KEY = '93648c872be3879cbab3623bdf67763b';
         const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
@@ -773,6 +784,14 @@
 
             saveToLocalStorage('continueWatching', continueWatching);
             renderContinueWatching();
+        }
+
+        // Pulisci tutta la lista "Continua a guardare"
+        function clearAllContinueWatching() {
+            if (confirm('Sei sicuro di voler rimuovere tutti i contenuti dalla sezione "Continua a guardare"?')) {
+                saveToLocalStorage('continueWatching', []);
+                renderContinueWatching();
+            }
         }
 
         // Mostra la sezione "Continua a guardare"
@@ -896,6 +915,20 @@
             document.getElementById('confirmationModal').classList.add('hidden');
         }
 
+        // Mostra il toast di completamento
+        function showCompletionToast(title) {
+            const toast = document.getElementById('completionToast');
+            const message = document.getElementById('completionMessage');
+            
+            message.textContent = `${title} completato e rimosso da "Continua a guardare"`;
+            toast.classList.remove('hidden');
+            
+            // Nascondi il toast dopo 3 secondi
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
         // Funzione per fare richieste con gestione CORS
         async function makeRequest(url, options = {}, useProxy = true, retryCount = 0) {
             try {
@@ -988,7 +1021,7 @@
                 loadingDiv.innerHTML = '<div class="spinner"></div>';
                 seriesGrid.appendChild(loadingDiv);
 
-                // Carica un set predefinito di serie TV popolari da TMDB come fallback
+                // Carica un set predefinito di serie TV popolari da TMDB como fallback
                 const popularSeries = await makeRequest(`${TMDB_BASE_URL}/tv/popular?api_key=${TMDB_API_KEY}&language=${LANG}&page=1`);
 
                 seriesGrid.innerHTML = '';
@@ -1136,6 +1169,21 @@
 
         // Open Player Modal for Movies - SENZA CORS PROXY per la riproduzione
         function openPlayerModal(title, src, item = null) {
+            // Verifica se il contenuto è già stato completato (progresso >= 95%)
+            if (item && item.progress >= 95) {
+                // Rimuovi dalla lista se è marcato come completato
+                removeContinueWatchingItem(
+                    item.id,
+                    item.type,
+                    item.season,
+                    item.episode
+                );
+                
+                // Avvisa l'utente
+                showCompletionToast(title);
+                return;
+            }
+
             document.getElementById('modalTitle').textContent = title;
 
             // Imposta l'elemento corrente che stiamo guardando
@@ -1171,6 +1219,7 @@
                     currentWatchingItem.season,
                     currentWatchingItem.episode
                 );
+                showCompletionToast(currentWatchingItem.title);
             }
 
             document.getElementById('playerModal').classList.add('hidden');
@@ -1199,6 +1248,27 @@
                     // Per semplicità, assumiamo una durata fissa (2 ore per film, 45 min per episodi)
                     const totalDuration = currentWatchingItem.type === 'movie' ? 7200 : 2700;
                     currentWatchingItem.progress = Math.min((currentWatchingItem.currentTime / totalDuration) * 100, 100);
+
+                    // Se il contenuto è stato completato (almeno al 95% per tolleranza)
+                    if (currentWatchingItem.progress >= 95) {
+                        // Rimuovi dalla lista "Continua a guardare"
+                        removeContinueWatchingItem(
+                            currentWatchingItem.id,
+                            currentWatchingItem.type,
+                            currentWatchingItem.season,
+                            currentWatchingItem.episode
+                        );
+                        
+                        // Mostra il messaggio di completamento
+                        showCompletionToast(currentWatchingItem.title);
+                        
+                        // Chiudi il player
+                        closePlayerModal();
+                        
+                        // Interrompi il tracking
+                        stopTrackingViewingTime();
+                        return;
+                    }
 
                     // Salva l'elemento aggiornato ogni 10 secondi
                     if (currentWatchingItem.currentTime % 10 === 0) {
@@ -1346,7 +1416,7 @@
             lastUpdateTime = new Date();
             console.log("Contenuti aggiornati alle:", lastUpdateTime.toLocaleTimeString());
         }
-        // Mostra il modal di conferma per la rimozione
+
         // Aggiornamento manuale
         function manualRefresh() {
             refreshAllContent();

@@ -1053,6 +1053,38 @@
             font-weight: bold;
             z-index: 5;
         }
+
+        /* Stili per i link di autenticazione */
+        #auth-links {
+            display: flex;
+            align-items: center;
+        }
+
+        #auth-links a {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        /* Per dispositivi mobili */
+        @media (max-width: 768px) {
+            #auth-links {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            #auth-links a {
+                margin: 5px 0;
+                justify-content: center;
+            }
+
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
     </style>
 </head>
 
@@ -1072,6 +1104,12 @@
             <a href="#series" class="text-white mx-4 hover:text-red-600">Serie TV</a>
             <a href="#continue" class="text-white mx-4 hover:text-red-600">Continua a guardare</a>
             <a href="archivio.html" class="text-white mx-4 hover:text-red-600">Archivio</a>
+
+            <!-- Aggiungi questa sezione per i link di autenticazione -->
+            <span id="auth-links" class="ml-4">
+                <!-- I link verranno popolati dinamicamente da JavaScript -->
+            </span>
+
             <div class="search-container ml-4">
                 <input id="searchInput" type="text" placeholder="Cerca film o serie..."
                     class="bg-gray-800 text-white p-2 rounded pl-3 pr-10" oninput="handleSearchInput()">
@@ -1249,6 +1287,58 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
     <script>
+
+
+        // Gestione autenticazione
+        function updateAuthLinks() {
+            const authLinksContainer = document.getElementById('auth-links');
+            const currentUser = JSON.parse(localStorage.getItem('teaserly_current_user'));
+
+            if (currentUser) {
+                // Utente loggato
+                authLinksContainer.innerHTML = `
+                <a href="profilo.html" class="text-white mx-3 hover:text-red-600">
+                    <i class="fas fa-user"></i> ${currentUser.name}
+                </a>
+                <a href="#" id="logout-link" class="text-white mx-3 hover:text-red-600">
+                    <i class="fas fa-sign-out-alt"></i> Esci
+                </a>
+            `;
+
+                // Aggiungi evento per il logout
+                document.getElementById('logout-link').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    localStorage.removeItem('teaserly_current_user');
+                    updateAuthLinks();
+                    window.location.reload();
+                });
+            } else {
+                // Utente non loggato
+                authLinksContainer.innerHTML = `
+                <a href="login.html" class="text-white mx-3 hover:text-red-600">
+                    <i class="fas fa-sign-in-alt"></i> Accedi
+                </a>
+                <a href="registrazione.html" class="text-white mx-3 hover:text-red-600">
+                    <i class="fas fa-user-plus"></i> Registrati
+                </a>
+            `;
+            }
+        }
+
+        // Aggiorna i link di autenticazione al caricamento della pagina
+        document.addEventListener('DOMContentLoaded', function () {
+            // Crea il contenitore per i link di autenticazione se non esiste
+            if (!document.getElementById('auth-links')) {
+                const authLinks = document.createElement('span');
+                authLinks.id = 'auth-links';
+                authLinks.className = 'ml-4';
+                document.querySelector('nav').appendChild(authLinks);
+            }
+
+            updateAuthLinks();
+        });
+
+
         const TMDB_API_KEY = '93648c872be3879cbab3623bdf67763b';
         const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
         const IMG_BASE_URL = 'https://image.tmdb.org/t/p/w300';

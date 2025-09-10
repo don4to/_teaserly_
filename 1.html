@@ -1038,6 +1038,29 @@
         <span id="completionMessage">Contenuto completato e rimosso da "Continua a guardare"</span>
     </div>
 
+    <div id="movieModal" class="fixed inset-0 bg-black bg-opacity-75 hidden flex items-center justify-center z-50">
+        <div class="bg-gray-900 p-6 rounded-lg w-full max-w-2xl max-h-90vh overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="movieModalTitle" class="text-xl font-bold"></h3>
+                <button class="bg-gray-600 text-white px-4 py-2 rounded text-sm" onclick="closeMovieModal()">
+                    <i class="fas fa-times"></i> Chiudi
+                </button>
+            </div>
+            <div class="flex flex-col md:flex-row gap-6">
+                <img id="movieModalPoster" src="" alt="Movie poster" class="w-full md:w-1/3 rounded-lg">
+                <div class="flex-1">
+                    <div id="movieModalDetails" class="mb-4"></div>
+                    <p id="movieModalOverview" class="text-gray-300"></p>
+                    <div class="mt-6">
+                        <button id="movieModalPlayButton" class="netflix-button">
+                            <i class="fas fa-play"></i> Riproduci
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
     <script>
         const TMDB_API_KEY = '93648c872be3879cbab3623bdf67763b';
@@ -1091,6 +1114,76 @@
             });
         }
 
+        // Nuova funzione per aprire i dettagli del film
+        async function openMovieModal(title, id, poster) {
+            document.getElementById('movieModalTitle').textContent = title;
+            document.getElementById('movieModalPoster').src = poster;
+            document.getElementById('movieModal').dataset.id = id;
+
+            // Pulisci i contenuti precedenti
+            document.getElementById('movieModalDetails').innerHTML = '';
+            document.getElementById('movieModalOverview').textContent = 'Caricamento...';
+
+            // Nascondi il pulsante play durante il caricamento
+            document.getElementById('movieModalPlayButton').classList.add('hidden');
+
+            // Mostra il modal
+            document.getElementById('movieModal').classList.remove('hidden');
+
+            try {
+                // Carica i dettagli del film
+                const data = await makeRequest(`${TMDB_BASE_URL}/movie/${id}?api_key=${TMDB_API_KEY}&language=${LANG}`);
+
+                // Aggiorna i dettagli
+                const detailsHtml = `
+            <div class="flex items-center mb-2">
+                <span class="rating mr-4">
+                    <i class="fas fa-star text-yellow-400"></i> ${data.vote_average ? data.vote_average.toFixed(1) : 'N/A'}
+                </span>
+                <span>${data.runtime ? `${data.runtime} min` : 'Durata N/A'}</span>
+            </div>
+            <div class="mb-3">
+                <span class="text-gray-400">Data di uscita: </span>
+                <span>${data.release_date ? new Date(data.release_date).toLocaleDateString('it-IT') : 'N/A'}</span>
+            </div>
+            <div class="mb-3">
+                <span class="text-gray-400">Generi: </span>
+                <span>${data.genres ? data.genres.map(genre => genre.name).join(', ') : 'N/A'}</span>
+            </div>
+        `;
+
+                document.getElementById('movieModalDetails').innerHTML = detailsHtml;
+                document.getElementById('movieModalOverview').textContent = data.overview || 'Nessuna descrizione disponibile.';
+
+                // Configura il pulsante play
+                const playButton = document.getElementById('movieModalPlayButton');
+                playButton.onclick = () => {
+                    closeMovieModal();
+                    // Cerca se abbiamo un progresso salvato per questo film
+                    const continueWatching = getFromLocalStorage('continueWatching') || [];
+                    const existingItem = continueWatching.find(i => i.id === id && i.type === 'movie');
+
+                    openPlayerModal(
+                        title,
+                        `${VIXSRC_BASE_URL}/movie/${id}?lang=it${existingItem ? `&t=${existingItem.currentTime}` : ''}`,
+                        { id, title, poster, type: 'movie', currentTime: existingItem ? existingItem.currentTime : 0 }
+                    );
+                };
+
+                // Mostra il pulsante play
+                playButton.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error loading movie details:', error);
+                document.getElementById('movieModalOverview').textContent = 'Errore nel caricamento dei dettagli del film.';
+            }
+        }
+
+        // Funzione per chiudere il modal del film
+        function closeMovieModal() {
+            document.getElementById('movieModal').classList.add('hidden');
+        }
+
         // Carica i contenuti hero
         async function loadHeroContent() {
             try {
@@ -1116,7 +1209,7 @@
                                     <button class="netflix-button" onclick="openPlayerModal('${movie.title}', '${VIXSRC_BASE_URL}/movie/${movie.id}?lang=it', { id: ${movie.id}, title: '${movie.title.replace(/'/g, "\\'")}', poster: '${IMG_BASE_URL}${movie.poster_path}', type: 'movie', currentTime: 0 })">
                                         <i class="fas fa-play"></i> Riproduci
                                     </button>
-                                    <button class="netflix-button netflix-button-outline" onclick="openSeriesModal('${movie.title}', ${movie.id}, '${IMG_BASE_URL}${movie.poster_path}')">
+                                    <button class="netflix-button netflix-button-outline" onclick="openMovieModal('${movie.title}', ${movie.id}, '${IMG_BASE_URL}${movie.poster_path}')">
                                         <i class="fas fa-info-circle"></i> Più informazioni
                                     </button>
                                 </div>

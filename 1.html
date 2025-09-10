@@ -867,224 +867,6 @@
                 margin: 0.5rem 0;
             }
         }
-
-        /* Stili per i caroselli delle categorie */
-        .category-carousel {
-            margin: 30px 0;
-            position: relative;
-        }
-
-        .category-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 0 60px 15px;
-        }
-
-        .category-title {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: white;
-        }
-
-        .carousel-nav {
-            display: flex;
-            gap: 10px;
-        }
-
-        .carousel-button {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .carousel-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .carousel-button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .carousel-container {
-            position: relative;
-            padding: 0 60px;
-        }
-
-        .carousel-track {
-            display: flex;
-            gap: 1rem;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            scrollbar-width: none;
-            padding: 5px 0 20px;
-        }
-
-        .carousel-track::-webkit-scrollbar {
-            display: none;
-        }
-
-        .carousel-item {
-            flex: 0 0 auto;
-            width: 180px;
-            transition: transform 0.3s ease;
-        }
-
-        .carousel-item:hover {
-            transform: scale(1.05);
-        }
-
-        @media (max-width: 1024px) {
-
-            .category-header,
-            .carousel-container {
-                padding: 0 40px;
-            }
-
-            .carousel-item {
-                width: 160px;
-            }
-        }
-
-        @media (max-width: 768px) {
-
-            .category-header,
-            .carousel-container {
-                padding: 0 30px;
-            }
-
-            .carousel-item {
-                width: 140px;
-            }
-        }
-
-        @media (max-width: 640px) {
-
-            .category-header,
-            .carousel-container {
-                padding: 0 15px;
-            }
-
-            .carousel-item {
-                width: 120px;
-            }
-
-            .category-title {
-                font-size: 1.2rem;
-            }
-        }
-
-        /* Aggiungi questi nuovi stili per il modal di errore */
-        .error-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .error-content {
-            background-color: #1a1a1a;
-            padding: 2rem;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            border-top: 4px solid #e50914;
-        }
-
-        .error-icon {
-            font-size: 3rem;
-            color: #e50914;
-            margin-bottom: 1rem;
-        }
-
-        .error-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: white;
-        }
-
-        .error-message {
-            color: #b3b3b3;
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-
-        .error-button {
-            background-color: #e50914;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-
-        .error-button:hover {
-            background-color: #f40612;
-        }
-
-        .coming-soon-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 100, 200, 0.9);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            z-index: 5;
-        }
-
-        /* Stili per i link di autenticazione */
-        #auth-links {
-            display: flex;
-            align-items: center;
-        }
-
-        #auth-links a {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: color 0.2s;
-        }
-
-        /* Per dispositivi mobili */
-        @media (max-width: 768px) {
-            #auth-links {
-                flex-direction: column;
-                width: 100%;
-                margin-top: 10px;
-            }
-
-            #auth-links a {
-                margin: 5px 0;
-                justify-content: center;
-            }
-
-            nav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
     </style>
 </head>
 
@@ -1103,13 +885,6 @@
             <a href="#films" class="text-white mx-4 hover:text-red-600">Film</a>
             <a href="#series" class="text-white mx-4 hover:text-red-600">Serie TV</a>
             <a href="#continue" class="text-white mx-4 hover:text-red-600">Continua a guardare</a>
-            <a href="archivio.html" class="text-white mx-4 hover:text-red-600">Archivio</a>
-
-            <!-- Aggiungi questa sezione per i link di autenticazione -->
-            <span id="auth-links" class="ml-4">
-                <!-- I link verranno popolati dinamicamente da JavaScript -->
-            </span>
-
             <div class="search-container ml-4">
                 <input id="searchInput" type="text" placeholder="Cerca film o serie..."
                     class="bg-gray-800 text-white p-2 rounded pl-3 pr-10" oninput="handleSearchInput()">
@@ -1158,12 +933,6 @@
             </div>
         </section>
 
-        <!-- Sezione Caroselli Categorie Film -->
-        <section id="categoryCarousels" class="mb-12">
-            <h2 class="section-title">Esplora per Genere</h2>
-            <!-- I caroselli verranno aggiunti dinamicamente qui -->
-        </section>
-
         <!-- Category Navigation -->
         <div class="category-nav" id="categoryNav">
             <button class="category-button active" data-category="popular">Popolari</button>
@@ -1174,7 +943,7 @@
 
         <!-- Films Section -->
         <section id="films" class="mb-12">
-            <h2 class="section-title">Film</h2>
+            <h2 class="section-title">Film Disponibili</h2>
             <div id="filmsGrid" class="content-grid">
                 <div class="loading-section">
                     <div class="spinner"></div>
@@ -1195,7 +964,7 @@
 
         <!-- Series Section -->
         <section id="series" class="mb-12">
-            <h2 class="section-title">Serie TV</h2>
+            <h2 class="section-title">Serie TV Disponibili</h2>
             <div id="seriesGrid" class="content-grid">
                 <div class="loading-section">
                     <div class="spinner"></div>
@@ -1269,76 +1038,8 @@
         <span id="completionMessage">Contenuto completato e rimosso da "Continua a guardare"</span>
     </div>
 
-
-    <!-- Aggiungi questo modal per gli errori 404 -->
-    <div id="errorModal" class="error-modal hidden">
-        <div class="error-content">
-            <div class="error-icon">
-                <i class="fas fa-hourglass-half"></i>
-            </div>
-            <h3 class="error-title">Contenuto in Arrivo!</h3>
-            <p class="error-message" id="errorMessage">
-                Questo contenuto non è al momento disponibile, ma tornerà presto.
-                Nel frattempo, esplora altri fantastici film e serie TV nel nostro catalogo.
-            </p>
-            <button class="error-button" onclick="hideErrorModal()">Esplora altri contenuti</button>
-        </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
     <script>
-
-
-        // Gestione autenticazione
-        function updateAuthLinks() {
-            const authLinksContainer = document.getElementById('auth-links');
-            const currentUser = JSON.parse(localStorage.getItem('teaserly_current_user'));
-
-            if (currentUser) {
-                // Utente loggato
-                authLinksContainer.innerHTML = `
-                <a href="profilo.html" class="text-white mx-3 hover:text-red-600">
-                    <i class="fas fa-user"></i> ${currentUser.name}
-                </a>
-                <a href="#" id="logout-link" class="text-white mx-3 hover:text-red-600">
-                    <i class="fas fa-sign-out-alt"></i> Esci
-                </a>
-            `;
-
-                // Aggiungi evento per il logout
-                document.getElementById('logout-link').addEventListener('click', function (e) {
-                    e.preventDefault();
-                    localStorage.removeItem('teaserly_current_user');
-                    updateAuthLinks();
-                    window.location.reload();
-                });
-            } else {
-                // Utente non loggato
-                authLinksContainer.innerHTML = `
-                <a href="login.html" class="text-white mx-3 hover:text-red-600">
-                    <i class="fas fa-sign-in-alt"></i> Accedi
-                </a>
-                <a href="registrazione.html" class="text-white mx-3 hover:text-red-600">
-                    <i class="fas fa-user-plus"></i> Registrati
-                </a>
-            `;
-            }
-        }
-
-        // Aggiorna i link di autenticazione al caricamento della pagina
-        document.addEventListener('DOMContentLoaded', function () {
-            // Crea il contenitore per i link di autenticazione se non esiste
-            if (!document.getElementById('auth-links')) {
-                const authLinks = document.createElement('span');
-                authLinks.id = 'auth-links';
-                authLinks.className = 'ml-4';
-                document.querySelector('nav').appendChild(authLinks);
-            }
-
-            updateAuthLinks();
-        });
-
-
         const TMDB_API_KEY = '93648c872be3879cbab3623bdf67763b';
         const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
         const IMG_BASE_URL = 'https://image.tmdb.org/t/p/w300';
@@ -1375,10 +1076,6 @@
         const MAX_LOAD_COUNT = 6;
         let isLoadingFilms = false;
         let isLoadingSeries = false;
-
-
-        // variabile per tracciare i generi
-        let movieGenres = [];
 
         // Inizializza lo Swiper per l'hero section
         function initSwiper() {
@@ -1419,7 +1116,7 @@
                                     <button class="netflix-button" onclick="openPlayerModal('${movie.title}', '${VIXSRC_BASE_URL}/movie/${movie.id}?lang=it', { id: ${movie.id}, title: '${movie.title.replace(/'/g, "\\'")}', poster: '${IMG_BASE_URL}${movie.poster_path}', type: 'movie', currentTime: 0 })">
                                         <i class="fas fa-play"></i> Riproduci
                                     </button>
-                                    <button class="netflix-button netflix-button-outline" onclick="showMovieInfo(${movie.id})">
+                                    <button class="netflix-button netflix-button-outline" onclick="openSeriesModal('${movie.title}', ${movie.id}, '${IMG_BASE_URL}${movie.poster_path}')">
                                         <i class="fas fa-info-circle"></i> Più informazioni
                                     </button>
                                 </div>
@@ -1436,51 +1133,6 @@
                 }
             } catch (error) {
                 console.error('Error loading hero content:', error);
-            }
-        }
-
-        // Nuova funzione per mostrare informazioni dettagliate del film
-        async function showMovieInfo(movieId) {
-            try {
-                const movieData = await makeRequest(`${TMDB_BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=${LANG}`);
-
-                // Crea un modal per mostrare le informazioni
-                const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
-                modal.innerHTML = `
-                    <div class="bg-gray-900 p-6 rounded-lg w-full max-w-2xl max-h-90vh overflow-y-auto">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-xl font-bold">${movieData.title}</h3>
-                            <button class="bg-gray-600 text-white px-4 py-2 rounded text-sm" onclick="this.parentElement.parentElement.parentElement.remove()">
-                                <i class="fas fa-times"></i> Chiudi
-                            </button>
-                        </div>
-                        <div class="flex flex-col md:flex-row gap-4">
-                            <img src="${IMG_BASE_URL}${movieData.poster_path}" alt="${movieData.title}" class="w-full md:w-1/3 rounded">
-                            <div class="flex-1">
-                                <p class="mb-3">${movieData.overview || 'Descrizione non disponibile'}</p>
-                                <div class="grid grid-cols-2 gap-2 text-sm">
-                                    <div><strong>Data di uscita:</strong> ${movieData.release_date || 'N/A'}</div>
-                                    <div><strong>Durata:</strong> ${movieData.runtime ? Math.floor(movieData.runtime / 60) + 'h ' + (movieData.runtime % 60) + 'm' : 'N/A'}</div>
-                                    <div><strong>Genere:</strong> ${movieData.genres ? movieData.genres.map(g => g.name).join(', ') : 'N/A'}</div>
-                                    <div><strong>Valutazione:</strong> ${movieData.vote_average ? movieData.vote_average.toFixed(1) + '/10' : 'N/A'}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                document.body.appendChild(modal);
-
-                // Chiudi il modal cliccando fuori
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.remove();
-                    }
-                });
-            } catch (error) {
-                console.error('Error loading movie details:', error);
-                alert('Impossibile caricare i dettagli del film. Riprova più tardi.');
             }
         }
 
@@ -2343,130 +1995,18 @@
             nav.classList.toggle('mobile-open');
         }
 
-        // Funzione per caricare i generi dei film
-        async function loadMovieGenres() {
-            try {
-                const data = await makeRequest(`${TMDB_BASE_URL}/genre/movie/list?api_key=${TMDB_API_KEY}&language=${LANG}`);
-                movieGenres = data.genres;
-
-                // Filtra i generi più popolari (puoi personalizzare questa lista)
-                const popularGenres = movieGenres.filter(genre =>
-                    [28, 12, 16, 35, 80, 99, 18, 10751, 14, 36, 27, 10402, 9648, 10749, 878, 10770, 53, 10752, 37].includes(genre.id)
-                );
-
-                // Carica i caroselli per ogni genere
-                loadCategoryCarousels(popularGenres.slice(0, 6)); // Mostra i primi 6 generi
-            } catch (error) {
-                console.error('Error loading movie genres:', error);
-            }
-        }
-
-        // Funzione per creare i caroselli delle categorie
-        async function loadCategoryCarousels(genres) {
-            const carouselsContainer = document.getElementById('categoryCarousels');
-
-            for (const genre of genres) {
-                try {
-                    // Carica i film per questo genere
-                    const movies = await makeRequest(`${TMDB_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${genre.id}&language=${LANG}&sort_by=popularity.desc&page=1`);
-
-                    if (movies.results.length > 0) {
-                        // Crea il carosello per questo genere
-                        const carouselId = `carousel-${genre.id}`;
-                        const carouselHTML = `
-                            <div class="category-carousel">
-                                <div class="category-header">
-                                    <h3 class="category-title">${genre.name}</h3>
-                                    <div class="carousel-nav">
-                                        <button class="carousel-button prev-button" onclick="scrollCarousel('${carouselId}', -1)">
-                                            <i class="fas fa-chevron-left"></i>
-                                        </button>
-                                        <button class="carousel-button next-button" onclick="scrollCarousel('${carouselId}', 1)">
-                                            <i class="fas fa-chevron-right"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="carousel-container">
-                                    <div id="${carouselId}" class="carousel-track">
-                                        ${movies.results.slice(0, 12).map(movie => `
-                                            <div class="carousel-item">
-                                                ${createCategoryCard(movie.title, `${IMG_BASE_URL}${movie.poster_path}`, movie.id, 'movie', movie.vote_average, movie.release_date)}
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-
-                        carouselsContainer.insertAdjacentHTML('beforeend', carouselHTML);
-                    }
-                } catch (error) {
-                    console.error(`Error loading movies for genre ${genre.name}:`, error);
-                }
-            }
-        }
-
-        // Funzione per creare le card per i caroselli (simile a createCard ma più piccola)
-        function createCategoryCard(title, poster, id, type, rating, date) {
-            // Controlla se è un contenuto recente
-            const isNew = isRecentContent(date);
-
-            return `
-                <div class="content-card cursor-pointer" onclick="handleCategoryCardClick('${title}', ${id}, '${type}', '${poster}')">
-                    ${isNew ? '<div class="new-badge">NUOVO</div>' : ''}
-                    <img src="${poster}" alt="${title}" class="w-full rounded">
-                    <div class="card-info">
-                        <div class="card-title">${title}</div>
-                        <div class="card-meta">
-                            <div class="rating">
-                                <i class="fas fa-star"></i> ${rating ? rating.toFixed(1) : 'N/A'}
-                            </div>
-                            <div>${date ? new Date(date).getFullYear() : 'N/A'}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Gestione del click sulle card dei caroselli
-        function handleCategoryCardClick(title, id, type, poster) {
-            if (type === 'movie') {
-                // Cerca se abbiamo un progresso salvato per questo film
-                const continueWatching = getFromLocalStorage('continueWatching') || [];
-                const existingItem = continueWatching.find(i => i.id === id && i.type === 'movie');
-
-                openPlayerModal(
-                    title,
-                    `${VIXSRC_BASE_URL}/movie/${id}?lang=it${existingItem ? `&t=${existingItem.currentTime}` : ''}`,
-                    { id, title, poster, type: 'movie', currentTime: existingItem ? existingItem.currentTime : 0 }
-                );
-            }
-        }
-
-        // Funzione per far scorrere i caroselli
-        function scrollCarousel(carouselId, direction) {
-            const carousel = document.getElementById(carouselId);
-            const scrollAmount = 300; // Quantità di scorrimento
-
-            carousel.scrollBy({
-                left: direction * scrollAmount,
-                behavior: 'smooth'
-            });
-        }
-
-        // funzione di inizializzazione per includere il caricamento dei generi
+        // Initial Load - CODICE AGGIORNATO
         document.addEventListener('DOMContentLoaded', function () {
             initSwiper();
             initAutoRefresh();
             renderContinueWatching();
-            setupCategoryButtons();
+            setupCategoryButtons(); // Ora questa funzione è definita correttamente
             setupInfiniteScroll();
             setupHeaderScroll();
 
             // Carica i contenuti iniziali
             loadFilms();
             loadSeries();
-            loadMovieGenres(); // Aggiungi questa linea
 
             // Aggiungi listener per chiudere il modal di conferma quando si clicca fuori
             document.addEventListener('click', function (event) {
@@ -2475,110 +2015,6 @@
                     hideConfirmationModal();
                 }
             });
-        });
-
-        // Aggiungi queste funzioni per gestire gli errori 404
-        function showErrorModal(contentTitle) {
-            const errorModal = document.getElementById('errorModal');
-            const errorMessage = document.getElementById('errorMessage');
-
-            errorMessage.innerHTML = `
-                "${contentTitle}" non è al momento disponibile, ma tornerà presto. 
-                <br>Nel frattempo, esplora altri fantastici film e serie TV nel nostro catalogo.
-            `;
-
-            errorModal.classList.remove('hidden');
-
-            // Aggiungi listener per chiudere il modal con ESC
-            document.addEventListener('keydown', handleErrorEscKey);
-        }
-
-        function hideErrorModal() {
-            document.getElementById('errorModal').classList.add('hidden');
-            document.removeEventListener('keydown', handleErrorEscKey);
-        }
-
-        function handleErrorEscKey(event) {
-            if (event.key === 'Escape') {
-                hideErrorModal();
-            }
-        }
-
-        // Modifica la funzione openPlayerModal per gestire gli errori
-        async function openPlayerModal(title, src, item = null) {
-            // Prima verifica se il contenuto è disponibile
-            try {
-                // Fai una richiesta HEAD per verificare se il contenuto esiste
-                const response = await fetch(src, { method: 'HEAD' });
-
-                if (!response.ok) {
-                    // Se la risposta non è ok (404, ecc.), mostra il modal di errore
-                    showErrorModal(title);
-                    return;
-                }
-            } catch (error) {
-                console.error('Errore nel verificare il contenuto:', error);
-                // In caso di errore di rete, mostra comunque il modal
-                showErrorModal(title);
-                return;
-            }
-
-            // Se il contenuto è disponibile, procedi normalmente
-            // Verifica se il contenuto è già stato completato (progresso >= 95%)
-            if (item && item.progress >= 95) {
-                // Rimuovi dalla lista se è marcato come completato
-                removeContinueWatchingItem(
-                    item.id,
-                    item.type,
-                    item.season,
-                    item.episode
-                );
-
-                // Avvisa l'utente
-                showCompletionToast(title);
-                return;
-            }
-
-            document.getElementById('modalTitle').textContent = title;
-
-            // Imposta l'elemento corrente che stiamo guardando
-            if (item) {
-                currentWatchingItem = item;
-            }
-
-            // NON usare il proxy CORS per il player, solo URL diretto
-            document.getElementById('playerIframe').src = src;
-
-            // Resetta la checkbox
-            document.getElementById('markAsCompleted').checked = false;
-
-            document.getElementById('playerModal').classList.remove('hidden');
-
-            // Aggiungi listener per chiudere modal con ESC
-            document.addEventListener('keydown', handleEscKey);
-
-            // Inizia a tracciare il tempo di visualizzazione
-            startTrackingViewingTime();
-        }
-
-        // Aggiungi anche un listener per errori nell'iframe
-        document.getElementById('playerIframe').addEventListener('load', function () {
-            try {
-                // Prova ad accedere al contenuto dell'iframe per verificare se ha caricato una pagina di errore
-                const iframe = document.getElementById('playerIframe');
-                const iframeContent = iframe.contentDocument || iframe.contentWindow.document;
-
-                if (iframeContent.body.innerHTML.includes('404') ||
-                    iframeContent.body.innerHTML.includes('Not Found') ||
-                    iframeContent.body.innerHTML.includes('Error')) {
-                    // Se rileviamo una pagina di errore, chiudiamo il player e mostriamo il messaggio
-                    closePlayerModal();
-                    showErrorModal(document.getElementById('modalTitle').textContent);
-                }
-            } catch (e) {
-                // Ignora errori di cross-origin
-                console.log('Impossibile verificare il contenuto iframe per policy CORS');
-            }
         });
     </script>
 </body>

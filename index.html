@@ -852,9 +852,6 @@
             <a href="#film"><i class="fas fa-film"></i> Film</a>
             <a href="#serietv"><i class="fas fa-tv"></i> Serie TV</a>
             <a href="#trailer"><i class="fas fa-play"></i> Tutti i Trailer</a>
-            <span id="auth-links">
-                <!-- I link di autenticazione verranno inseriti qui dinamicamente -->
-            </span>
         </nav>
     </header>
     <!-- Hero Section -->
@@ -966,46 +963,6 @@
 
     <script src="tmdb.js"></script>
     <script>
-
-        // Gestione autenticazione
-        function updateAuthLinks() {
-            const authLinksContainer = document.getElementById('auth-links');
-            const currentUser = JSON.parse(localStorage.getItem('teaserly_current_user'));
-
-            if (currentUser) {
-                // Utente loggato
-                authLinksContainer.innerHTML = `
-                <a href="profilo.html"><i class="fas fa-user"></i> ${currentUser.name}</a>
-                <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> Esci</a>
-            `;
-
-                // Aggiungi evento per il logout
-                document.getElementById('logout-link').addEventListener('click', function (e) {
-                    e.preventDefault();
-                    localStorage.removeItem('teaserly_current_user');
-                    updateAuthLinks();
-                    window.location.reload();
-                });
-            } else {
-                // Utente non loggato
-                authLinksContainer.innerHTML = `
-                <a href="login.html"><i class="fas fa-sign-in-alt"></i> Accedi</a>
-                <a href="registrazione.html"><i class="fas fa-user-plus"></i> Registrati</a>
-            `;
-            }
-        }
-
-        // Aggiorna i link di autenticazione al caricamento della pagina
-        document.addEventListener('DOMContentLoaded', function () {
-            // Crea il contenitore per i link di autenticazione se non esiste
-            if (!document.getElementById('auth-links')) {
-                const authLinks = document.createElement('span');
-                authLinks.id = 'auth-links';
-                document.querySelector('.Link').appendChild(authLinks);
-            }
-
-            updateAuthLinks();
-        });
 
         /*ELIMINARE*/
         // Controllo se l'utente ha già accettato i cookie

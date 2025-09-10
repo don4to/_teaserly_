@@ -14,7 +14,7 @@
     <link rel="apple-touch-icon" href="icona-touch-apple.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3884558259497205"
-     crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
 
     <style>
         /* Reset e Stili Generali */
@@ -805,52 +805,58 @@
         .paypal-logo {
             height: 24px;
         }
+
         .Logo {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Spazio tra il logo e il link */
-}
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            /* Spazio tra il logo e il link */
+        }
 
-.logo-link {
-    color: var(--light-color);
-    text-decoration: none;
-    font-size: 1.2rem;
-    font-weight: bold;
-    transition: color 0.3s;
-}
+        .logo-link {
+            color: var(--light-color);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
 
-.logo-link:hover {
-    color: var(--primary-color); /* Colore al passaggio del mouse, coerente con il tema */
-}
+        .logo-link:hover {
+            color: var(--primary-color);
+            /* Colore al passaggio del mouse, coerente con il tema */
+        }
     </style>
 </head>
 
 <body>
     <header>
-    <div class="Logo">
-        <a href="#home"><img src="logo.png" alt="logo" /></a>
-        <a href="1.html" class="logo-link">MyFlix</a> <!-- Aggiunto il link al file 1.html -->
-    </div>
+        <div class="Logo">
+            <a href="#home"><img src="logo.png" alt="logo" /></a>
+            <a href="1.html" class="logo-link">MyFlix</a>
+        </div>
 
-    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
-        <i class="fas fa-bars"></i>
-    </button>
-    <button class="mobile-search-toggle" id="mobile-search-toggle">
-        <i class="fas fa-search"></i>
-    </button>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <button class="mobile-search-toggle" id="mobile-search-toggle">
+            <i class="fas fa-search"></i>
+        </button>
 
-    <div class="search-container">
-        <input type="text" class="search-input" placeholder="Cerca film o serie TV..." id="search-input">
-        <button class="search-button" id="search-button"><i class="fas fa-search"></i></button>
-        <div class="search-results" id="search-results"></div>
-    </div>
-    <nav class="Link">
-        <a href="#home" class="active"><i class="fas fa-home"></i> Home</a>
-        <a href="#film"><i class="fas fa-film"></i> Film</a>
-        <a href="#serietv"><i class="fas fa-tv"></i> Serie TV</a>
-        <a href="#trailer"><i class="fas fa-play"></i> Tutti i Trailer</a>
-    </nav>
-</header>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Cerca film o serie TV..." id="search-input">
+            <button class="search-button" id="search-button"><i class="fas fa-search"></i></button>
+            <div class="search-results" id="search-results"></div>
+        </div>
+        <nav class="Link">
+            <a href="#home" class="active"><i class="fas fa-home"></i> Home</a>
+            <a href="#film"><i class="fas fa-film"></i> Film</a>
+            <a href="#serietv"><i class="fas fa-tv"></i> Serie TV</a>
+            <a href="#trailer"><i class="fas fa-play"></i> Tutti i Trailer</a>
+            <span id="auth-links">
+                <!-- I link di autenticazione verranno inseriti qui dinamicamente -->
+            </span>
+        </nav>
+    </header>
     <!-- Hero Section -->
     <section class="hero" id="home">
         <h1>Scopri i migliori trailer</h1>
@@ -960,6 +966,46 @@
 
     <script src="tmdb.js"></script>
     <script>
+
+        // Gestione autenticazione
+        function updateAuthLinks() {
+            const authLinksContainer = document.getElementById('auth-links');
+            const currentUser = JSON.parse(localStorage.getItem('teaserly_current_user'));
+
+            if (currentUser) {
+                // Utente loggato
+                authLinksContainer.innerHTML = `
+                <a href="profilo.html"><i class="fas fa-user"></i> ${currentUser.name}</a>
+                <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> Esci</a>
+            `;
+
+                // Aggiungi evento per il logout
+                document.getElementById('logout-link').addEventListener('click', function (e) {
+                    e.preventDefault();
+                    localStorage.removeItem('teaserly_current_user');
+                    updateAuthLinks();
+                    window.location.reload();
+                });
+            } else {
+                // Utente non loggato
+                authLinksContainer.innerHTML = `
+                <a href="login.html"><i class="fas fa-sign-in-alt"></i> Accedi</a>
+                <a href="registrazione.html"><i class="fas fa-user-plus"></i> Registrati</a>
+            `;
+            }
+        }
+
+        // Aggiorna i link di autenticazione al caricamento della pagina
+        document.addEventListener('DOMContentLoaded', function () {
+            // Crea il contenitore per i link di autenticazione se non esiste
+            if (!document.getElementById('auth-links')) {
+                const authLinks = document.createElement('span');
+                authLinks.id = 'auth-links';
+                document.querySelector('.Link').appendChild(authLinks);
+            }
+
+            updateAuthLinks();
+        });
 
         /*ELIMINARE*/
         // Controllo se l'utente ha già accettato i cookie
@@ -1321,5 +1367,3 @@
 </body>
 
 </html>
-
-

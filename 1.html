@@ -867,6 +867,434 @@
                 margin: 0.5rem 0;
             }
         }
+
+        /* Stili  per il modal di dettaglio */
+        .detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .detail-content {
+            background-color: #181818;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 95vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        .detail-backdrop {
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .detail-backdrop::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(to top, #181818, transparent);
+        }
+
+        .detail-poster {
+            position: absolute;
+            bottom: 20px;
+            left: 40px;
+            width: 180px;
+            height: 270px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            z-index: 2;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-info {
+            padding: 40px 40px 30px;
+            margin-top: 150px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .detail-title-container {
+            margin-left: 200px;
+            /* Spazio per il poster */
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+
+        .detail-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .detail-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-left: 200px;
+        }
+
+        .detail-rating {
+            color: #46d369;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .detail-year {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+
+        .detail-runtime {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+
+        .detail-genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            margin-left: 200px;
+        }
+
+        .genre-tag {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .detail-overview {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #e0e0e0;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #e50914;
+        }
+
+        .detail-actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .detail-play-button {
+            background: linear-gradient(135deg, #e50914, #f40612);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+        }
+
+        .detail-play-button:hover {
+            background: linear-gradient(135deg, #f40612, #e50914);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4);
+        }
+
+        .detail-info-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .detail-info-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .detail-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.3rem;
+            z-index: 10;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .detail-close:hover {
+            background-color: #e50914;
+            transform: rotate(90deg);
+        }
+
+        /* Miglioramenti responsive */
+        @media (max-width: 768px) {
+            .detail-content {
+                max-width: 95%;
+                margin: 10px;
+            }
+
+            .detail-backdrop {
+                height: 250px;
+            }
+
+            .detail-poster {
+                width: 120px;
+                height: 180px;
+                left: 20px;
+                bottom: 10px;
+            }
+
+            .detail-info {
+                padding: 25px 20px 20px;
+                margin-top: 100px;
+            }
+
+            .detail-title-container {
+                margin-left: 140px;
+                margin-bottom: 15px;
+            }
+
+            .detail-title {
+                font-size: 1.6rem;
+                -webkit-line-clamp: 3;
+            }
+
+            .detail-meta {
+                margin-left: 140px;
+                gap: 10px;
+            }
+
+            .detail-genres {
+                margin-left: 140px;
+            }
+
+            .detail-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .detail-play-button,
+            .detail-info-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .detail-backdrop {
+                height: 200px;
+            }
+
+            .detail-poster {
+                width: 100px;
+                height: 150px;
+                left: 15px;
+            }
+
+            .detail-title-container {
+                margin-left: 120px;
+            }
+
+            .detail-title {
+                font-size: 1.4rem;
+            }
+
+            .detail-meta {
+                margin-left: 120px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .detail-genres {
+                margin-left: 120px;
+            }
+        }
+
+        /* Stili per il selettore di stagioni */
+        .season-selector-container {
+            margin-bottom: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #e50914;
+        }
+
+        .season-selector-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        .season-select {
+            width: 100%;
+            max-width: 300px;
+            background-color: #2d2d2d;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .season-select:focus {
+            outline: none;
+            border-color: #e50914;
+            box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
+        }
+
+        .season-select option {
+            background-color: #2d2d2d;
+            color: white;
+            padding: 10px;
+        }
+
+        /* Stili per la griglia degli episodi */
+        .episodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .episode-card {
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #333;
+        }
+
+        .episode-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            border-color: #e50914;
+        }
+
+        .episode-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .episode-info {
+            padding: 15px;
+        }
+
+        .episode-number {
+            font-size: 0.9rem;
+            color: #e50914;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .episode-title {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .episode-overview {
+            font-size: 0.85rem;
+            color: #aaa;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            line-height: 1.4;
+        }
+
+        .continue-badge {
+            display: inline-block;
+            background-color: #e50914;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .episodes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .season-select {
+                max-width: 100%;
+            }
+        }
+
+        .no-episodes {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+            font-style: italic;
+            grid-column: 1 / -1;
+        }
     </style>
 </head>
 
@@ -981,6 +1409,43 @@
             <div id="searchGrid" class="content-grid"></div>
         </section>
     </main>
+
+    <!-- Modal di Dettaglio -->
+    <div id="detailModal" class="detail-modal hidden">
+        <div class="detail-content">
+            <button class="detail-close" onclick="closeDetailModal()" aria-label="Chiudi">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="detailBackdrop" class="detail-backdrop"></div>
+            <img id="detailPoster" class="detail-poster" src="" alt="Poster">
+
+            <div class="detail-info">
+                <div class="detail-title-container">
+                    <h2 id="detailTitle" class="detail-title"></h2>
+                </div>
+
+                <div id="detailMeta" class="detail-meta"></div>
+
+                <div id="detailGenres" class="detail-genres"></div>
+
+                <p id="detailOverview" class="detail-overview"></p>
+
+                <div id="detailActions" class="detail-actions"></div>
+
+                <div id="episodeSelector" class="episode-selector hidden">
+                    <div class="season-selector-container">
+                        <label class="season-selector-label" for="seasonSelect">Seleziona Stagione</label>
+                        <select id="seasonSelect" class="season-select" onchange="loadEpisodesForSelectedSeason()">
+                            <option value="">Caricamento stagioni...</option>
+                        </select>
+                    </div>
+                    <div id="episodesGrid" class="episodes-grid"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
     <!-- Player Modal -->
     <div id="playerModal" class="fixed inset-0 bg-black bg-opacity-90 hidden flex items-center justify-center z-50">
@@ -1099,6 +1564,9 @@
         const MAX_LOAD_COUNT = 6;
         let isLoadingFilms = false;
         let isLoadingSeries = false;
+
+        // Variabile globale per memorizzare i dati della serie corrente
+        let currentSeriesData = null;
 
         // Inizializza lo Swiper per l'hero section
         function initSwiper() {
@@ -1228,6 +1696,143 @@
                 console.error('Error loading hero content:', error);
             }
         }
+
+
+        // Funzione per caricare le stagioni nella select
+        async function loadSeasonsIntoSelect(seriesId, seriesTitle, seriesPoster) {
+            try {
+                const data = await makeRequest(`${TMDB_BASE_URL}/tv/${seriesId}?api_key=${TMDB_API_KEY}&language=${LANG}`);
+
+                // Salva i dati della serie per uso futuro
+                currentSeriesData = {
+                    id: seriesId,
+                    title: seriesTitle,
+                    poster: seriesPoster,
+                    seasons: data.seasons.filter(season => season.season_number >= 0) // Filtra stagioni speciali (season_number < 0)
+                };
+
+                const seasonSelect = document.getElementById('seasonSelect');
+                seasonSelect.innerHTML = '';
+
+                if (currentSeriesData.seasons.length === 0) {
+                    seasonSelect.innerHTML = '<option value="">Nessuna stagione disponibile</option>';
+                    return;
+                }
+
+                // Aggiungi ogni stagione alla select
+                currentSeriesData.seasons.forEach(season => {
+                    const option = document.createElement('option');
+                    option.value = season.season_number;
+
+                    // Formatta il testo dell'opzione
+                    let optionText = `Stagione ${season.season_number}`;
+                    if (season.name && season.name !== `Season ${season.season_number}`) {
+                        optionText += `: ${season.name}`;
+                    }
+                    if (season.episode_count) {
+                        optionText += ` (${season.episode_count} episodi)`;
+                    }
+
+                    option.textContent = optionText;
+                    seasonSelect.appendChild(option);
+                });
+
+                // Carica gli episodi della prima stagione
+                loadEpisodesForSelectedSeason();
+
+            } catch (error) {
+                console.error('Error loading seasons:', error);
+                const seasonSelect = document.getElementById('seasonSelect');
+                seasonSelect.innerHTML = '<option value="">Errore nel caricamento delle stagioni</option>';
+            }
+        }
+
+        // Funzione per caricare gli episodi della stagione selezionata
+        async function loadEpisodesForSelectedSeason() {
+            if (!currentSeriesData) return;
+
+            const seasonSelect = document.getElementById('seasonSelect');
+            const selectedSeason = parseInt(seasonSelect.value);
+
+            if (isNaN(selectedSeason)) return;
+
+            try {
+                const data = await makeRequest(`${TMDB_BASE_URL}/tv/${currentSeriesData.id}/season/${selectedSeason}?api_key=${TMDB_API_KEY}&language=${LANG}`);
+                const episodesGrid = document.getElementById('episodesGrid');
+                episodesGrid.innerHTML = '';
+
+                if (!data.episodes || data.episodes.length === 0) {
+                    episodesGrid.innerHTML = '<div class="no-episodes">Nessun episodio disponibile per questa stagione</div>';
+                    return;
+                }
+
+                data.episodes.forEach(episode => {
+                    const episodeCard = document.createElement('div');
+                    episodeCard.className = 'episode-card';
+
+                    // Cerca se abbiamo un progresso salvato per questo episodio
+                    const continueWatching = getFromLocalStorage('continueWatching') || [];
+                    const existingItem = continueWatching.find(i =>
+                        i.id === currentSeriesData.id &&
+                        i.type === 'tv' &&
+                        i.season === selectedSeason &&
+                        i.episode === episode.episode_number
+                    );
+
+                    // Usa l'immagine dell'episodio se disponibile, altrimenti una placeholder
+                    const episodeImage = episode.still_path
+                        ? `${IMG_BASE_URL}${episode.still_path}`
+                        : 'https://via.placeholder.com/300x150/333/999999?text=Immagine+non+disponibile';
+
+                    // Formatta la data dell'episodio
+                    let airDate = '';
+                    if (episode.air_date) {
+                        const date = new Date(episode.air_date);
+                        airDate = ` - ${date.toLocaleDateString('it-IT')}`;
+                    }
+
+                    episodeCard.innerHTML = `
+                <img src="${episodeImage}" alt="${episode.name}" class="episode-image">
+                <div class="episode-info">
+                    <div class="episode-number">
+                        Episodio ${episode.episode_number}${airDate}
+                        ${existingItem ? '<span class="continue-badge">CONTINUA</span>' : ''}
+                    </div>
+                    <div class="episode-title">${episode.name || 'Episodio senza titolo'}</div>
+                    <div class="episode-overview">${episode.overview || 'Nessuna descrizione disponibile per questo episodio.'}</div>
+                </div>
+            `;
+
+                    episodeCard.onclick = () => {
+                        closeDetailModal();
+
+                        const itemData = {
+                            id: currentSeriesData.id,
+                            title: currentSeriesData.title,
+                            poster: currentSeriesData.poster,
+                            type: 'tv',
+                            season: selectedSeason,
+                            episode: episode.episode_number,
+                            currentTime: existingItem ? existingItem.currentTime : 0
+                        };
+
+                        openPlayerModal(
+                            `${currentSeriesData.title} - S${selectedSeason}E${episode.episode_number}`,
+                            `${VIXSRC_BASE_URL}/tv/${currentSeriesData.id}/${selectedSeason}/${episode.episode_number}?lang=it${existingItem ? `&t=${existingItem.currentTime}` : ''}`,
+                            itemData
+                        );
+                    };
+
+                    episodesGrid.appendChild(episodeCard);
+                });
+
+            } catch (error) {
+                console.error('Error loading episodes:', error);
+                const episodesGrid = document.getElementById('episodesGrid');
+                episodesGrid.innerHTML = '<div class="no-episodes">Errore nel caricamento degli episodi</div>';
+            }
+        }
+
 
         // Funzione per salvare i dati nel localStorage
         function saveToLocalStorage(key, data) {
@@ -1644,22 +2249,11 @@
             `;
 
             div.onclick = () => {
-                if (type === 'movie') {
-                    // Cerca se abbiamo un progresso salvato per questo film
-                    const continueWatching = getFromLocalStorage('continueWatching') || [];
-                    const existingItem = continueWatching.find(i => i.id === id && i.type === 'movie');
-
-                    openPlayerModal(
-                        title,
-                        `${VIXSRC_BASE_URL}/movie/${id}?lang=it${existingItem ? `&t=${existingItem.currentTime}` : ''}`,
-                        { id, title, poster, type: 'movie', currentTime: existingItem ? existingItem.currentTime : 0 }
-                    );
-                } else {
-                    openSeriesModal(title, id, poster);
-                }
+                openDetailModal(id, type);
             };
             return div;
         }
+
 
         // Verifica se il contenuto è recente (ultimi 3 mesi)
         function isRecentContent(dateString) {
@@ -1707,19 +2301,7 @@
                                 </div>
                             `;
                             div.onclick = () => {
-                                if (item.media_type === 'movie') {
-                                    // Cerca se abbiamo un progresso salvato per questo film
-                                    const continueWatching = getFromLocalStorage('continueWatching') || [];
-                                    const existingItem = continueWatching.find(i => i.id === item.id && i.type === 'movie');
-
-                                    openPlayerModal(
-                                        title,
-                                        `${VIXSRC_BASE_URL}/movie/${item.id}?lang=it${existingItem ? `&t=${existingItem.currentTime}` : ''}`,
-                                        { id: item.id, title, poster: `${IMG_BASE_URL}${item.poster_path}`, type: 'movie', currentTime: existingItem ? existingItem.currentTime : 0 }
-                                    );
-                                } else {
-                                    openSeriesModal(title, item.id, `${IMG_BASE_URL}${item.poster_path}`);
-                                }
+                                openDetailModal(item.id, item.media_type);
                                 dropdown.classList.remove('active');
                                 document.getElementById('searchInput').value = '';
                             };
@@ -1749,13 +2331,15 @@
             }
         }
 
-        // Close search dropdown when clicking outside
+        // Chiudi il modal quando si clicca fuori dal contenuto
         document.addEventListener('click', function (event) {
-            const searchContainer = document.querySelector('.search-container');
-            const dropdown = document.getElementById('searchDropdown');
+            const detailModal = document.getElementById('detailModal');
+            const detailContent = document.querySelector('.detail-content');
 
-            if (!searchContainer.contains(event.target)) {
-                dropdown.classList.remove('active');
+            if (!detailModal.classList.contains('hidden') &&
+                !detailContent.contains(event.target) &&
+                event.target !== detailContent) {
+                closeDetailModal();
             }
         });
 
@@ -2109,6 +2693,277 @@
                 }
             });
         });
+
+        // Nuova funzione per aprire il modal di dettaglio
+        async function openDetailModal(id, type) {
+            try {
+                // Carica i dettagli del contenuto
+                const endpoint = type === 'movie' ? 'movie' : 'tv';
+                const data = await makeRequest(`${TMDB_BASE_URL}/${endpoint}/${id}?api_key=${TMDB_API_KEY}&language=${LANG}`);
+
+                // Imposta il backdrop
+                const backdrop = document.getElementById('detailBackdrop');
+                if (data.backdrop_path) {
+                    backdrop.style.backgroundImage = `url('${BACKDROP_BASE_URL}${data.backdrop_path}')`;
+                } else {
+                    backdrop.style.backgroundImage = `url('${IMG_BASE_URL}${data.poster_path}')`;
+                }
+
+                // Imposta il poster
+                const posterImg = document.getElementById('detailPoster');
+                posterImg.src = `${IMG_BASE_URL}${data.poster_path}`;
+                posterImg.alt = type === 'movie' ? data.title : data.name;
+
+                // Imposta il titolo
+                const title = type === 'movie' ? data.title : data.name;
+                document.getElementById('detailTitle').textContent = title;
+
+                // Imposta i metadati
+                const metaContainer = document.getElementById('detailMeta');
+                const rating = data.vote_average ? data.vote_average.toFixed(1) : 'N/A';
+                const year = type === 'movie'
+                    ? (data.release_date ? new Date(data.release_date).getFullYear() : 'N/A')
+                    : (data.first_air_date ? new Date(data.first_air_date).getFullYear() : 'N/A');
+
+                let metaHTML = `<span class="detail-rating"><i class="fas fa-star"></i> ${rating}</span>`;
+                metaHTML += `<span class="detail-year">${year}</span>`;
+
+                if (type === 'movie' && data.runtime) {
+                    metaHTML += `<span class="detail-runtime">${Math.floor(data.runtime / 60)}h ${data.runtime % 60}m</span>`;
+                } else if (type === 'tv' && data.number_of_seasons) {
+                    const seasonsText = data.number_of_seasons === 1 ? 'Stagione' : 'Stagioni';
+                    metaHTML += `<span class="detail-runtime">${data.number_of_seasons} ${seasonsText}</span>`;
+                }
+
+                metaContainer.innerHTML = metaHTML;
+
+                // Imposta i generi
+                const genresContainer = document.getElementById('detailGenres');
+                genresContainer.innerHTML = '';
+                if (data.genres && data.genres.length > 0) {
+                    data.genres.forEach(genre => {
+                        const genreTag = document.createElement('span');
+                        genreTag.className = 'genre-tag';
+                        genreTag.textContent = genre.name;
+                        genresContainer.appendChild(genreTag);
+                    });
+                }
+
+                // Imposta la trama
+                const overview = data.overview || 'Nessuna descrizione disponibile per questo contenuto.';
+                document.getElementById('detailOverview').textContent = overview;
+
+                // Imposta le azioni
+                const actionsContainer = document.getElementById('detailActions');
+                actionsContainer.innerHTML = '';
+
+                // Pulsante Riproduci migliorato
+                const playButton = document.createElement('button');
+                playButton.className = 'detail-play-button';
+                playButton.innerHTML = '<i class="fas fa-play"></i> Riproduci';
+
+                // Gestione evento click migliorata
+                playButton.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    closeDetailModal();
+
+                    if (type === 'movie') {
+                        // Cerca se abbiamo un progresso salvato per questo film
+                        const continueWatching = getFromLocalStorage('continueWatching') || [];
+                        const existingItem = continueWatching.find(i => i.id === id && i.type === 'movie');
+
+                        openPlayerModal(
+                            data.title,
+                            `${VIXSRC_BASE_URL}/movie/${id}?lang=it${existingItem ? `&t=${existingItem.currentTime}` : ''}`,
+                            {
+                                id,
+                                title: data.title,
+                                poster: `${IMG_BASE_URL}${data.poster_path}`,
+                                type: 'movie',
+                                currentTime: existingItem ? existingItem.currentTime : 0
+                            }
+                        );
+                    } else {
+                        // Per le serie TV, mostra il selettore di episodi
+                        document.getElementById('episodeSelector').classList.remove('hidden');
+                        loadSeasons(id, data.name, `${IMG_BASE_URL}${data.poster_path}`);
+                    }
+                });
+
+                actionsContainer.appendChild(playButton);
+
+                // Pulsante Più informazioni (solo per serie TV)
+                if (type === 'tv') {
+                    const infoButton = document.createElement('button');
+                    infoButton.className = 'detail-info-button';
+                    infoButton.innerHTML = '<i class="fas fa-info-circle"></i> Seleziona Episodio';
+                    infoButton.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        // Mostra il selettore di episodi
+                        document.getElementById('episodeSelector').classList.remove('hidden');
+                        loadSeasonsIntoSelect(id, data.name, `${IMG_BASE_URL}${data.poster_path}`);
+                    });
+                    actionsContainer.appendChild(infoButton);
+                }
+
+                // Nascondi il selettore di episodi inizialmente
+                document.getElementById('episodeSelector').classList.add('hidden');
+
+                // Mostra il modal
+                document.getElementById('detailModal').classList.remove('hidden');
+
+                // Aggiungi listener per chiudere con ESC
+                document.addEventListener('keydown', handleDetailEscKey);
+
+                // Blocca lo scroll del body
+                document.body.style.overflow = 'hidden';
+
+            } catch (error) {
+                console.error('Error loading details:', error);
+                // Mostra un messaggio di errore più user-friendly
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #aaa;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                <p>Errore nel caricamento dei dettagli. Riprova più tardi.</p>
+            </div>
+        `;
+                document.getElementById('detailModal').classList.remove('hidden');
+                document.querySelector('.detail-info').innerHTML = '';
+                document.querySelector('.detail-info').appendChild(errorMessage);
+            }
+        }
+
+        // Funzione per chiudere il modal di dettaglio
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+            document.removeEventListener('keydown', handleDetailEscKey);
+
+            // Ripristina lo scroll del body
+            document.body.style.overflow = 'auto';
+
+            // Ripristina lo stato iniziale
+            document.getElementById('episodeSelector').classList.add('hidden');
+        }
+
+        // Gestione tasto ESC per chiudere modal di dettaglio
+        function handleDetailEscKey(event) {
+            if (event.key === 'Escape') {
+                closeDetailModal();
+            }
+        }
+
+
+        // Funzione per caricare le stagioni di una serie TV
+        async function loadSeasons(seriesId, seriesTitle, seriesPoster) {
+            try {
+                const data = await makeRequest(`${TMDB_BASE_URL}/tv/${seriesId}?api_key=${TMDB_API_KEY}&language=${LANG}`);
+                const seasonButtons = document.getElementById('seasonButtons');
+                seasonButtons.innerHTML = '';
+
+                // Crea i pulsanti per ogni stagione
+                for (let i = 1; i <= data.number_of_seasons; i++) {
+                    const seasonButton = document.createElement('button');
+                    seasonButton.className = 'season-button';
+                    seasonButton.textContent = `Stagione ${i}`;
+                    seasonButton.dataset.season = i;
+
+                    if (i === 1) {
+                        seasonButton.classList.add('active');
+                    }
+
+                    seasonButton.onclick = () => {
+                        // Rimuovi la classe active da tutti i pulsanti
+                        document.querySelectorAll('.season-button').forEach(btn => {
+                            btn.classList.remove('active');
+                        });
+
+                        // Aggiungi la classe active al pulsante cliccato
+                        seasonButton.classList.add('active');
+
+                        // Carica gli episodi della stagione selezionata
+                        loadEpisodesForSeason(seriesId, i, seriesTitle, seriesPoster);
+                    };
+
+                    seasonButtons.appendChild(seasonButton);
+                }
+
+                // Carica gli episodi della prima stagione
+                if (data.number_of_seasons > 0) {
+                    loadEpisodesForSeason(seriesId, 1, seriesTitle, seriesPoster);
+                }
+
+            } catch (error) {
+                console.error('Error loading seasons:', error);
+            }
+        }
+
+        // Funzione per caricare gli episodi di una stagione
+        async function loadEpisodesForSeason(seriesId, seasonNumber, seriesTitle, seriesPoster) {
+            try {
+                const data = await makeRequest(`${TMDB_BASE_URL}/tv/${seriesId}/season/${seasonNumber}?api_key=${TMDB_API_KEY}&language=${LANG}`);
+                const episodesGrid = document.getElementById('episodesGrid');
+                episodesGrid.innerHTML = '';
+
+                data.episodes.forEach(episode => {
+                    const episodeCard = document.createElement('div');
+                    episodeCard.className = 'episode-card';
+
+                    // Cerca se abbiamo un progresso salvato per questo episodio
+                    const continueWatching = getFromLocalStorage('continueWatching') || [];
+                    const existingItem = continueWatching.find(i =>
+                        i.id === parseInt(seriesId) &&
+                        i.type === 'tv' &&
+                        i.season === parseInt(seasonNumber) &&
+                        i.episode === episode.episode_number
+                    );
+
+                    // Usa l'immagine dell'episodio se disponibile, altrimenti una placeholder
+                    const episodeImage = episode.still_path
+                        ? `${IMG_BASE_URL}${episode.still_path}`
+                        : 'https://via.placeholder.com/300x150/333/999999?text=Immagine+non+disponibile';
+
+                    episodeCard.innerHTML = `
+                        <img src="${episodeImage}" alt="${episode.name}" class="episode-image">
+                        <div class="episode-info">
+                            <div class="episode-number">Episodio ${episode.episode_number}${existingItem ? ' • Continua a guardare' : ''}</div>
+                            <div class="episode-title">${episode.name || 'Episodio senza titolo'}</div>
+                            <div class="episode-overview">${episode.overview || 'Nessuna descrizione disponibile.'}</div>
+                        </div>
+                    `;
+
+                    episodeCard.onclick = () => {
+                        closeDetailModal();
+
+                        const itemData = {
+                            id: parseInt(seriesId),
+                            title: seriesTitle,
+                            poster: seriesPoster,
+                            type: 'tv',
+                            season: parseInt(seasonNumber),
+                            episode: parseInt(episode.episode_number),
+                            currentTime: existingItem ? existingItem.currentTime : 0
+                        };
+
+                        openPlayerModal(
+                            `${seriesTitle} - S${seasonNumber}E${episode.episode_number}`,
+                            `${VIXSRC_BASE_URL}/tv/${seriesId}/${seasonNumber}/${episode.episode_number}?lang=it${existingItem ? `&t=${existingItem.currentTime}` : ''}`,
+                            itemData
+                        );
+                    };
+
+                    episodesGrid.appendChild(episodeCard);
+                });
+
+            } catch (error) {
+                console.error('Error loading episodes:', error);
+            }
+        }
     </script>
 </body>
 
